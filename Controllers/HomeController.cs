@@ -11,6 +11,7 @@ namespace ControlDeUnidades.Controllers
 {
     public class HomeController : Controller
     {
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -20,6 +21,9 @@ namespace ControlDeUnidades.Controllers
 
         public IActionResult Index()
         {
+            var Connection = new Connection();
+            Boolean Prueba;
+            Prueba = Connection.Login();
             return View();
         }
 
