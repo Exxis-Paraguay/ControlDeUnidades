@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
 
 namespace ControlDeUnidades.Controllers
 {
@@ -23,7 +24,10 @@ namespace ControlDeUnidades.Controllers
         {
             var Connection = new Connection();
             Boolean Prueba;
+            DataTable dtPruebas = new DataTable();
+
             Prueba = Connection.Login();
+
             //return View();
             return RedirectToAction("Index", "Login");
         }
