@@ -27,8 +27,9 @@ namespace ControlDeUnidades.Controllers
             DataTable dtPruebas = new DataTable();
 
             Prueba = Connection.Login();
-            dtPruebas = Connection.Get("BusinessPartners");
-            return View();
+
+            //return View();
+            return RedirectToAction("Index", "Login");
         }
 
         public IActionResult Privacy()
