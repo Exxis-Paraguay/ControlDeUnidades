@@ -27,9 +27,9 @@ namespace ControlDeUnidades.Controllers
             DataTable dtPruebas = new DataTable();
 
             Prueba = Connection.Login();
+            return View();
+            //return RedirectToAction("Index", "Login");
 
-            //return View();
-            return RedirectToAction("Index", "Login");
         }
 
         public IActionResult Privacy()

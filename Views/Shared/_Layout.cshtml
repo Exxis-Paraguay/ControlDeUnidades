@@ -63,7 +63,8 @@
 
     <script>
         $(document).ready(function () {
-
+            //Ocultar todas las torres
+            $(".torre").css("display","none");
             $("#bellNotificacion").css("display", "none");
             // Ocultar menu lateral
             $("#mobile-collapse").click();
@@ -79,18 +80,28 @@
                 $("#sector-proyectos").css("display", "none");
                 $(".buscador").val("");
             });
-            // Evento del boton volver de la pantalla unidades
+            $(".item-torre").click(function () {
+                $("#torre1").css("display", "inline");
+                $(".seccion-buscar-torre").css("display", "none");
+                $("#buscador-torre").val("");
+            });
+            // Evento del boton volver de la pantalla filtro por torre
             $("#btnVolverProyectos").click(function () {
                 $("#sector-unidades").css("display", "none");
                 $("#sector-proyectos").css("display", "inline");
                 $(".buscador").val("");
+            });
+            // Evento del boton volver de la pantalla unidades
+            $("#btnVolverFiltroTorres").click(function () {
+                $(".torre").css("display", "none");
+                $(".seccion-buscar-torre").css("display", "inline");
             });
 
 
             // Ocultar Sector Unidades
             $("#sector-unidades").css("display", "none");
 
-            // Buscador
+            // Buscador Proyecto
             $('.buscador').keyup(function () {
                 $("#sector-unidades").css("display", "none");
                 $("#sector-proyectos").css("display", "inline");
@@ -108,7 +119,68 @@
                     }
                 }
             });
+
+            // Buscador Torre
+            $('#buscador-torre').keyup(function () {
+                /*$("#sector-unidades").css("display", "none");
+                $("#sector-proyectos").css("display", "inline");*/
+                var nombres = $('.nombres-torre');
+                var buscando = $(this).val();
+                var item = '';
+                for (var i = 0; i < nombres.length; i++) {
+                    item = $(nombres[i]).html().toLowerCase();
+                    for (var x = 0; x < item.length; x++) {
+                        if (buscando.length == 0 || item.indexOf(buscando) > -1) {
+                            $(nombres[i]).parents('.item-torre').show();
+                        } else {
+                            $(nombres[i]).parents('.item-torre').hide();
+                        }
+                    }
+                }
+            });
+
+            
+            // Filtro Pisos/Cocheras/Bauleras
+            $('.filtro-estado input.form-check-input').click(function () {
+                // recorro filtro de pisos
+                var cont = parseInt(0);
+                //oculto todo
+                $(".Pisos, .Cocheras, .Bauleras").css("display", "none");
+                //por cada filtro seleccionado se muestra
+                $(".cbPCB :checkbox:checked").each(function () {
+                    $("." + $(this).val()).removeAttr("style");
+                    cont++;
+                });
+                // Si no se selecciono ningun filtro, se muestra todo
+                if (cont == 0) $(".Pisos, .Cocheras, .Bauleras").removeAttr("style");
+
+
+                /*
+                //por cada filtro seleccionado se muestra
+                $(".cbEstados :checkbox:checked").each(function () {
+                    $("#cb" + $(this).val()).removeAttr("checked");
+                    cont++;
+                });
+                // Si no se selecciono ningun filtro, se muestra todo
+                if (cont == 0) $(".Libres, .Asignados, .Reservados, .Formalizados, .Protocolizados").removeAttr("style");
+                */
+            });
+            // Filtro Estado
+            $('.filtro-estado input.form-check-input').click(function () {
+                // recorro filtro de estados
+                var cont = parseInt(0);
+                //oculto todo
+                $(".Libres, .Asignados, .Reservados, .Formalizados, .Protocolizados").css("display", "none");
+                //por cada filtro seleccionado se muestra
+                $(".cbEstados :checkbox:checked").each(function () {
+                    $("." + $(this).val()).removeAttr("style");
+                    cont++;
+                });
+                // Si no se selecciono ningun filtro, se muestra todo
+                if (cont == 0) $(".Libres, .Asignados, .Reservados, .Formalizados, .Protocolizados").removeAttr("style");
+            });
         });
+
     </script>
 
 
@@ -624,906 +696,824 @@
                                         <!-- SECTOR UNIDADES INICIO -->
                                         <div id="sector-unidades" class="row">
                                             <br />
-                                            <!-- Inicio Modal ------------------------------------------------------------------------------------------------------- -->
-                                            <div id="dialogInfoUnidad" class="modal-info-unidad" title="Información de Unidad">
-                                                <div class="page-body">
-                                                    <div class="row">
-                                                        <div class="col-sm-12">
-                                                            <!-- Bootstrap tab card inicio-->
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h5>Proyecto#1 - Torre#1</h5>
-                                                                    <span>Unidad A9-1</span>
-                                                                </div>
-                                                                <div class="card-block">
-                                                                    <!-- Row inicio -->
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12 col-xl-12">
-                                                                            <!-- Nav tabs -->
-                                                                            <ul class="nav nav-tabs  tabs" role="tablist">
-                                                                                <li class="nav-item">
-                                                                                    <a class="nav-link active" data-toggle="tab" href="#infoUnidad" role="tab">Informaci&oacute;n</a>
-                                                                                </li>
-                                                                                <li class="nav-item">
-                                                                                    <a class="nav-link" data-toggle="tab" href="#docUnidad" role="tab">Documentos</a>
-                                                                                </li>
-                                                                            </ul>
-                                                                            <!-- Tab panes -->
-                                                                            <div class="tab-content tabs card-block">
-                                                                                <div class="tab-pane active" id="infoUnidad" role="tabpanel">
-                                                                                    <ul class="list-group list-group-flush">
-                                                                                        <li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: Juan Perez</li>
-                                                                                        <li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: Carlos Pereira</li>
-                                                                                        <li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: 02/02/2013</li>
-                                                                                        <li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: 2.500 $</li>
-                                                                                    </ul>
-                                                                                </div>
-                                                                                <div class="tab-pane" id="docUnidad" role="tabpanel">
-                                                                                    <div class="col-xl-12 col-md-12">
-                                                                                        <div class="card table-card">
-                                                                                            <div class="card-header">
-                                                                                                <h5>Juan Perez</h5>
-                                                                                            </div>
-                                                                                            <div class="card-block">
-                                                                                                <div class="table-responsive">
-                                                                                                    <table class="table table-hover m-b-0 without-header">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td>
-                                                                                                                    <div class="d-inline-block align-middle">
-                                                                                                                        <i class="far fa-file-alt text-c-red f-24"></i>
-                                                                                                                        <div class="d-inline-block">
-                                                                                                                            <p class="text-muted m-b-0">Factura Nro: 001-005-213548</p>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td class="text-right">
-                                                                                                                    <h6 class="f-w-700">$1.500</h6>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>
-                                                                                                                    <div class="d-inline-block align-middle">
-                                                                                                                        <i class="far fa-file-alt text-c-blue f-24"></i>
-                                                                                                                        <div class="d-inline-block">
-                                                                                                                            <p class="text-muted m-b-0">Nota Cr&eacute;dito Nro: 958745</p>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td class="text-right">
-                                                                                                                    <h6 class="f-w-700">$1.500</h6>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>
-                                                                                                                    <div class="d-inline-block align-middle">
-                                                                                                                        <i class="far fa-file-alt text-c-red f-24"></i>
-                                                                                                                        <div class="d-inline-block">
-                                                                                                                            <p class="text-muted m-b-0">Documento Nro: 001-005-854712</p>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td class="text-right">
-                                                                                                                    <h6 class="f-w-700">$2.700</h6>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>
-                                                                                                                    <div class="d-inline-block align-middle">
-                                                                                                                        <i class="far fa-file-alt text-c-red f-24"></i>
-                                                                                                                        <div class="d-inline-block">
-                                                                                                                            <p class="text-muted m-b-0">Documento Nro: 001-003-987741</p>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td class="text-right">
-                                                                                                                    <h6 class="f-w-700">$5.500</h6>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
 
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <!-- Row fin -->
-                                                                </div>
-                                                            </div>
-                                                            <!-- Bootstrap tab card fin-->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Fin Modal ---------------------------------------------------------------------------------------------------------- -->
                                             @RenderBody()
+
+
+
+                                        <div class="col-xl-12 col-md-12 seccion-buscar-torre">
                                             <div class="row">
                                                 <div class="col-sm-10">
-                                                    <h6 class="sub-title text-uppercase">#Nombre Proyecto# - Torre#1</h6>
+                                                    <form class="form-material">
+                                                        <div class="form-group form-primary">
+                                                            <input id="buscador-torre" type="text" name="footer-email" class="form-control">
+                                                            <span class="form-bar"></span>
+                                                            <label class="float-label"><i class="fa fa-search m-r-10"></i>Buscar Torre</label>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                                 <div class="col-sm-2 text-right card-block">
                                                     <button id="btnVolverProyectos" class="btn waves-effect waves-light btn-inverse btn-outline-inverse"><i class="icofont icofont-exchange"></i>Volver</button>
                                                 </div>
                                             </div>
 
-                                            <div class="col-xl-12 col-md-12">
-
-                                                <div class="card-block">
-                                                    <div class="table-responsive">
-                                                        <table class="table">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="text-center text-white bg-c-purple ">
-                                                                        <i class="fas fa-building mat-icon f-24"></i>
-                                                                        <h6>Piso 5</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-2</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                </tr>
-
-                                                                <tr>
-                                                                    <td class="text-center text-white bg-c-purple ">
-                                                                        <i class="fas fa-building mat-icon f-24"></i>
-                                                                        <h6>Piso 4</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-2</h6>
-                                                                    </td>
-
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-2</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                </tr>
-
-                                                                <tr>
-                                                                    <td class="text-center text-white bg-c-purple ">
-                                                                        <i class="fas fa-building mat-icon f-24"></i>
-                                                                        <h6>Piso 3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-2</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                </tr>
-
-                                                                <tr>
-                                                                    <td class="text-center text-white bg-c-purple ">
-                                                                        <i class="fas fa-building mat-icon f-24"></i>
-                                                                        <h6>Piso 2</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-2</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                </tr>
-
-                                                                <tr>
-                                                                    <td class="text-center text-white bg-c-purple ">
-                                                                        <i class="fas fa-car mat-icon f-24"></i>
-                                                                        <h6>Cocheras 1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-2</h6>
-                                                                    </td>
-
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-2</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-yellow pointDash">
-                                                                        <i class="fas fa-close text-c-red mat-icon f-24"></i>
-                                                                        <h6>A 9-1</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-3</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-9</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-10</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-red pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-11</h6>
-                                                                    </td>
-                                                                    <td class="text-center text-white bg-c-green pointDash">
-                                                                        <br>
-                                                                        <h6>A 9-12</h6>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-
+                                            <div class="row">
+                                                <div class="col-md-2 item-torre">
+                                                    <div class="item card text-center order-visitor-card">
+                                                        <div class="card-block texto-torre">
+                                                            <h6 class="m-b-0"><label class="nombres-torre">Torre Norte</label></h6>
+                                                            <p></p>
+                                                            <h4 class="m-t-15 m-b-15"><i class="fas fa-building m-r-15"></i></h4>
+                                                            <p class="m-b-0">48% Libres</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 item-torre">
+                                                    <div class="item card text-center order-visitor-card">
+                                                        <div class="card-block texto-torre">
+                                                            <h6 class="m-b-0"><label class="nombres-torre">Torre Sur</label></h6>
+                                                            <p></p>
+                                                            <h4 class="m-t-15 m-b-15"><i class="fas fa-building m-r-15"></i></h4>
+                                                            <p class="m-b-0">8% Libres</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 item-torre">
+                                                    <div class="item card text-center order-visitor-card">
+                                                        <div class="card-block texto-torre">
+                                                            <h6 class="m-b-0"><label class="nombres-torre">Torre Este</label></h6>
+                                                            <p></p>
+                                                            <h4 class="m-t-15 m-b-15"><i class="fas fa-building m-r-15"></i></h4>
+                                                            <p class="m-b-0">15% Libres</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 item-torre">
+                                                    <div class="item card text-center order-visitor-card">
+                                                        <div class="card-block texto-torre">
+                                                            <h6 class="m-b-0"><label class="nombres-torre">Torre oeste</label></h6>
+                                                            <p></p>
+                                                            <h4 class="m-t-15 m-b-15"><i class="fas fa-building m-r-15"></i></h4>
+                                                            <p class="m-b-0">61% Libres</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
 
 
+                                            <!-- Inicio filtro por piso/cochera/baulera -->
 
+                                            <div id="torre1" class="torre">
 
+                                                    <div class="row">
+                                                        <div class="col-sm-10">
+                                                            <h6 class="sub-title text-uppercase">#Nombre Proyecto# - Torre#1</h6>
+                                                        </div>
+                                                        <div class="col-sm-2 text-right card-block">
+                                                            <button id="btnVolverFiltroTorres" class="btn waves-effect waves-light btn-inverse btn-outline-inverse"><i class="icofont icofont-exchange"></i>Volver</button>
+                                                        </div>
+                                                    </div>
 
-
-
-
-
-
-
-
-
-                                            <div class="col-xl-12 col-md-12" style="display: none;">
-                                                <div class="card mat-clr-stat-card">
+                                                <div class="col-xl-12 col-md-12">
+                                                    <!-- Inicio filtro por piso/cochera/baulera -->
+                                                    <div class="row filtro-estado">
+                                                        <div class="col-sm-12">
+                                                            <div class="card">
+                                                                <div class="card-block caption-breadcrumb">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12">
+                                                                            <div>
+                                                                                <h6>Filtro por Art&iacute;culo</h6>
+                                                                                <hr>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row page-header-breadcrumb cbPCB">
+                                                                        <div class="col-sm-2">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="checkbox" id="cbPisos" value="Pisos">
+                                                                                <label class="form-check-label" for="cbPisos">Pisos</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="checkbox" id="cbCocheras" value="Cocheras">
+                                                                                <label class="form-check-label" for="cbCocheras">Cocheras</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="checkbox" id="cbBauleras" value="Bauleras">
+                                                                                <label class="form-check-label" for="cbBauleras">Bauleras</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Inicio filtro por piso/cochera/baulera -->
+                                                    <!-- Inicio filtro estado unidad/es -->
+                                                    <div class="row filtro-estado">
+                                                        <div class="col-sm-12">
+                                                            <div class="card">
+                                                                <div class="card-block caption-breadcrumb">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12">
+                                                                            <div>
+                                                                                <h6>Filtro por Estado</h6>
+                                                                                <hr>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row page-header-breadcrumb cbEstados">
+                                                                        <div class="col-sm-2">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="checkbox" id="cbLibres" value="Libres">
+                                                                                <label class="form-check-label" for="cbLibres">Libres</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="checkbox" id="cbAsignados" value="Asignados">
+                                                                                <label class="form-check-label" for="cbAsignados">Asignados</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="checkbox" id="cbReservados" value="Reservados">
+                                                                                <label class="form-check-label" for="cbReservados">Reservados</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="checkbox" id="cbFormalizados" value="Formalizados">
+                                                                                <label class="form-check-label" for="cbFormalizados">Formalizados</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="checkbox" id="cProtocolizados" value="Protocolizados">
+                                                                                <label class="form-check-label" for="cbProtocolizados">Protocolizados</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Fin filtro estado unidad/es -->
                                                     <div class="card-block">
-                                                        <div class="row">
-                                                            <div class="col-1 cst-cont text-center text-white bg-c-purple">
-                                                                <div class="row align-items-center text-center">
-                                                                    <div class="col-4 p-r-0">
-                                                                        <i class="fas fa-building mat-icon f-24"></i>
-                                                                    </div>
-                                                                    <div class="col-8 p-l-0">
-                                                                        <h6>Piso 9</h6>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-center text-white bg-c-yellow pointDash">
-                                                                <div class="row align-items-center text-center">
-                                                                    <div class="col-4 p-r-0">
-                                                                        <i class="fas fa-close text-c-red f-24"></i>
-                                                                    </div>
-                                                                    <div class="col-8 p-l-0">
-                                                                        <h5>A 9-1</h5>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>A 9-2</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>A 9-3</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>A 9-4</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-green pointDash">
-                                                                <h5>A 9-5</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>B 9-1</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>B 9-2</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>B 9-3</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>B 9-4</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>B 9-5</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>B 9-6</h5>
-                                                            </div>
-                                                        </div>
+                                                        <div class="table-responsive">
+                                                            <table class="table">
+                                                                <tbody>
+                                                                    <tr class="Pisos">
+                                                                        <td class="text-center text-white bg-c-purple ">
+                                                                            <i class="fas fa-building mat-icon f-24"></i>
+                                                                            <h6>Piso 5</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-2</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                    </tr>
 
-                                                        <div class="row">
-                                                            <div class="col-1 cst-cont text-center text-white bg-c-purple">
-                                                                <div class="row align-items-center text-center">
-                                                                    <div class="col-4 p-r-0">
-                                                                        <i class="fas fa-building mat-icon f-24"></i>
-                                                                    </div>
-                                                                    <div class="col-8 p-l-0">
-                                                                        <h6>Piso 8</h6>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>A 8-1</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>A 8-2</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>A 8-3</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>A 8-4</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>A 8-5</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-green pointDash">
-                                                                <h5>B 8-1</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>B 8-2</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-red pointDash">
-                                                                <h5>B 8-3</h5>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-center text-white bg-c-yellow pointDash">
-                                                                <div class="row align-items-center text-center">
-                                                                    <div class="col-4 p-r-0">
-                                                                        <i class="fas fa-close text-c-red f-24"></i>
-                                                                    </div>
-                                                                    <div class="col-8 p-l-0">
-                                                                        <h5>B 8-4</h5>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-1 cst-cont text-white bg-c-green pointDash">
-                                                                <h5>B 8-5</h5>
-                                                            </div>
+                                                                    <tr class="Pisos">
+                                                                        <td class="text-center text-white bg-c-purple ">
+                                                                            <i class="fas fa-building mat-icon f-24"></i>
+                                                                            <h6>Piso 4</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-2</h6>
+                                                                        </td>
+
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-2</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <tr class="Pisos">
+                                                                        <td class="text-center text-white bg-c-purple ">
+                                                                            <i class="fas fa-building mat-icon f-24"></i>
+                                                                            <h6>Piso 3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-2</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <tr class="Cocheras">
+                                                                        <td class="text-center text-white bg-c-purple ">
+                                                                            <i class="fas fa-car mat-icon f-24"></i>
+                                                                            <h6>Cocheras 2</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-2</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <tr class="Bauleras">
+                                                                        <td class="text-center text-white bg-c-purple ">
+                                                                            <i class="fas fa-car mat-icon f-24"></i>
+                                                                            <h6>Bauleras 1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-2</h6>
+                                                                        </td>
+
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-2</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-yellow Asignados pointDash">
+                                                                            <i class="fas fa-close text-c-red mat-icon f-24"></i>
+                                                                            <h6>A 9-1</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-3</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-9</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-10</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-red pointDash Formalizados">
+                                                                            <br>
+                                                                            <h6>A 9-11</h6>
+                                                                        </td>
+                                                                        <td class="text-center text-white bg-c-green pointDash Libres">
+                                                                            <br>
+                                                                            <h6>A 9-12</h6>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
                                                         </div>
                                                     </div>
                                                 </div>
+
+
                                             </div>
-
-
                                             <br /> <br /> <br />
-
-
                                             <!-- Indice Macroproyectos inicio -->
                                             <div class="col-xl-12">
                                                 <div class="card proj-progress-card">
@@ -1618,6 +1608,128 @@
             </div>
         </div>
     </div>
+
+
+
+    <!-- Inicio Modal ------------------------------------------------------------------------------------------------------- -->
+    <div id="dialogInfoUnidad" class="modal-info-unidad" title="Información de Unidad">
+        <div class="page-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- Bootstrap tab card inicio-->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Proyecto#1 - Torre#1</h5>
+                            <span>Unidad A9-1</span>
+                        </div>
+                        <div class="card-block">
+                            <!-- Row inicio -->
+                            <div class="row">
+                                <div class="col-lg-12 col-xl-12">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs  tabs" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab" href="#infoUnidad" role="tab">Informaci&oacute;n</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#docUnidad" role="tab">Documentos</a>
+                                        </li>
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content tabs card-block">
+                                        <div class="tab-pane active" id="infoUnidad" role="tabpanel">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: Juan Perez</li>
+                                                <li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: Carlos Pereira</li>
+                                                <li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: 02/02/2013</li>
+                                                <li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: 2.500 $</li>
+                                            </ul>
+                                        </div>
+                                        <div class="tab-pane" id="docUnidad" role="tabpanel">
+                                            <div class="col-xl-12 col-md-12">
+                                                <div class="card table-card">
+                                                    <div class="card-header">
+                                                        <h5>Juan Perez</h5>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover m-b-0 without-header">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="d-inline-block align-middle">
+                                                                                <i class="far fa-file-alt text-c-red f-24"></i>
+                                                                                <div class="d-inline-block">
+                                                                                    <p class="text-muted m-b-0">Factura Nro: 001-005-213548</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="text-right">
+                                                                            <h6 class="f-w-700">$1.500</h6>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="d-inline-block align-middle">
+                                                                                <i class="far fa-file-alt text-c-blue f-24"></i>
+                                                                                <div class="d-inline-block">
+                                                                                    <p class="text-muted m-b-0">Nota Cr&eacute;dito Nro: 958745</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="text-right">
+                                                                            <h6 class="f-w-700">$1.500</h6>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="d-inline-block align-middle">
+                                                                                <i class="far fa-file-alt text-c-red f-24"></i>
+                                                                                <div class="d-inline-block">
+                                                                                    <p class="text-muted m-b-0">Documento Nro: 001-005-854712</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="text-right">
+                                                                            <h6 class="f-w-700">$2.700</h6>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="d-inline-block align-middle">
+                                                                                <i class="far fa-file-alt text-c-red f-24"></i>
+                                                                                <div class="d-inline-block">
+                                                                                    <p class="text-muted m-b-0">Documento Nro: 001-003-987741</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="text-right">
+                                                                            <h6 class="f-w-700">$5.500</h6>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Row fin -->
+                        </div>
+                    </div>
+                    <!-- Bootstrap tab card fin-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin Modal ---------------------------------------------------------------------------------------------------------- -->
+                                            
+
+
     <!-- Warning Section Starts -->
     <!-- Older IE warning message -->
     <!--[if lt IE 10]>
