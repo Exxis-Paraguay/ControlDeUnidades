@@ -24,7 +24,8 @@ namespace ControlDeUnidades.Controllers
             var Connection = new Connection();
             Boolean Prueba;
             Prueba = Connection.Login();
-            return View();
+            //return View();
+            return RedirectToAction("Index", "Login");
         }
 
         public IActionResult Privacy()

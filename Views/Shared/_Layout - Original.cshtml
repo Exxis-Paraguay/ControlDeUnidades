@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ControlDeUnidades</title>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <meta name="keywords" content="departamentos, unidades, alquiler, edificio, venta, vivienda" />
+    <meta name="author" content="Constructora GG" />
+    <!-- <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />  -->
+    <!-- Favicon icon -->
+    <link rel="icon" href="~/images/favicon.ico" type="image/x-icon">
+    <!-- Google font-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
+    <!-- waves.css -->
+    <link rel="stylesheet" href="~/pages/waves/css/waves.min.css" type="text/css" media="all">
+    <!-- Required Fremwork -->
+    <link rel="stylesheet" type="text/css" href="~/css/bootstrap/css/bootstrap.min.css">
+    <!-- waves.css -->
+    <link rel="stylesheet" href="~/pages/waves/css/waves.min.css" type="text/css" media="all">
+    <!-- themify icon -->
+    <link rel="stylesheet" type="text/css" href="~/icon/themify-icons/themify-icons.css">
+    <!-- font-awesome-n -->
+    <link rel="stylesheet" type="text/css" href="~/css/font-awesome-n.min.css">
+    <link rel="stylesheet" type="text/css" href="~/css/font-awesome.min.css">
+    <!-- scrollbar.css -->
+    <link rel="stylesheet" type="text/css" href="~/css/jquery.mCustomScrollbar.css">
+    <!-- Style.css -->
+    <link rel="stylesheet" type="text/css" href="~/css/style.css">
+
+    <link rel="stylesheet" href="~/css/jquery-ui.css">
+
+
+    <!-- Required Jquery -->
+    <script type="text/javascript" src="~/js/jquery/jquery.min.js "></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script type="text/javascript" src="~/js/jquery-ui/jquery-ui.min.js "></script>
+    <script type="text/javascript" src="~/js/popper.js/popper.min.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap/js/bootstrap.min.js "></script>
+
+
+
+
+    <!-- waves js -->
+    <script src="~/pages/waves/js/waves.min.js"></script>
+    <!-- jquery slimscroll js -->
+    <script type="text/javascript" src="~/js/jquery-slimscroll/jquery.slimscroll.js"></script>
+    <!-- slimscroll js -->
+    <script src="~/js/jquery.mCustomScrollbar.concat.min.js "></script>
+    <!-- menu js -->
+    <script src="~/js/pcoded.min.js"></script>
+    <script src="~/js/vertical/vertical-layout.min.js "></script>
+
+
+
+    <script type="text/javascript" src="~/js/script.js "></script>
+
+    <script>
+        $(document).ready(function () {
+            alert("hola");
+            /*$("#bellNotificacion").css("display", "none");
+            // Ocultar menu lateral
+            $("#mobile-collapse").click();
+            // Ocultar modal
+            $("#dialogInfoUnidad").css("display", "none");
+            // Click sobre unidad aparece modal
+            $(".pointDash").click(function () {
+                $("#dialogInfoUnidad").dialog();
+            });
+            //Evento sobre los proyectos desde dashboard principal y menu
+            $(".item, .liProyNom a").click(function () {
+                $("#sector-unidades").css("display", "inline");
+                $("#sector-proyectos").css("display", "none");
+                $(".buscador").val("");
+            });
+            // Evento del boton volver de la pantalla unidades
+            $("#btnVolverProyectos").click(function () {
+                $("#sector-unidades").css("display", "none");
+                $("#sector-proyectos").css("display", "inline");
+                $(".buscador").val("");
+            });
+
+
+            // Ocultar Sector Unidades
+            $("#sector-unidades").css("display", "none");
+
+            // Buscador
+            $('.buscador').keyup(function () {
+                $("#sector-unidades").css("display", "none");
+                $("#sector-proyectos").css("display", "inline");
+                var nombres = $('.nombres');
+                var buscando = $(this).val();
+                var item = '';
+                for (var i = 0; i < nombres.length; i++) {
+                    item = $(nombres[i]).html().toLowerCase();
+                    for (var x = 0; x < item.length; x++) {
+                        if (buscando.length == 0 || item.indexOf(buscando) > -1) {
+                            $(nombres[i]).parents('.item').show();
+                        } else {
+                            $(nombres[i]).parents('.item').hide();
+                        }
+                    }
+                }
+            });*/
+        });
+    </script>
+
+
+    <style>
+        .pointDash {
+            cursor: pointer;
+            border-right: 1px solid #d6d6d6;
+            border-bottom: 1px solid #d6d6d6;
+        }
+
+        .borderUnidad {
+            border: 1px solid #fff;
+        }
+
+        .fixed-button {
+            display: none;
+        }
+
+        .modal-info-unidad, .ui-dialog {
+            width: 700px !important;
+        }
+
+        .table td, .table th {
+            vertical-align: none !important;
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ControlDeUnidades</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- PRUEBAS INICIO ================================================================ -->
+
+
+
+
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <nav class="navbar header-navbar pcoded-header">
+                <div class="navbar-wrapper">
+                    <div class="navbar-logo">
+                        <a class="mobile-menu waves-effect waves-light" id="mobile-collapse" href="#!">
+                            <i class="ti-menu"></i>
+                        </a>
+                        <div class="mobile-search waves-effect waves-light">
+                            <div class="header-search">
+                                <div class="main-search morphsearch-search">
+                                    <div class="input-group">
+                                        <span class="input-group-prepend search-close"><i class="ti-close input-group-text"></i></span>
+                                        <input type="text" class="form-control" placeholder="Enter Keyword">
+                                        <span class="input-group-append search-btn"><i class="ti-search input-group-text"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="index.html">
+                            <img class="img-fluid" src="~/images/logo.png" alt="Theme-Logo" />
+                        </a>
+                        <a class="mobile-options waves-effect waves-light">
+                            <i class="ti-more"></i>
+                        </a>
+                    </div>
+                    <div class="navbar-container container-fluid">
+                        <ul class="nav-left">
+                            <li>
+                                <div class="sidebar_toggle"><a href="javascript:void(0)"><i class="ti-menu"></i></a></div>
+                            </li>
+                            <li>
+                                <a href="#!" onclick="javascript:toggleFullScreen()" class="waves-effect waves-light">
+                                    <i class="ti-fullscreen"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav-right">
+                            <li class="header-notification">
+                                <a id="bellNotificacion" href="#!" class="waves-effect waves-light">
+                                    <i class="ti-bell"></i>
+                                    <span class="badge bg-c-red"></span>
+                                </a>
+                                <ul class="show-notification">
+                                    <li>
+                                        <h6>Notificacion</h6>
+                                        <label class="label label-danger">New</label>
+                                    </li>
+                                    <li class="waves-effect waves-light">
+                                        <div class="media">
+                                            <img class="d-flex align-self-center img-radius" src="~/images/avatar-4.jpg" alt="Generic placeholder image">
+                                            <div class="media-body">
+                                                <h5 class="notification-user">Usuario SAP</h5>
+                                                <p class="notification-msg">Venta de unidad 9-2.</p>
+                                                <span class="notification-time">Hace 30 minutos</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="waves-effect waves-light">
+                                        <div class="media">
+                                            <img class="d-flex align-self-center img-radius" src="~/images/avatar-4.jpg" alt="Generic placeholder image">
+                                            <div class="media-body">
+                                                <h5 class="notification-user">Usuario SAP</h5>
+                                                <p class="notification-msg">Factcura vencida en unidad 9-1.</p>
+                                                <span class="notification-time">Hace 30 minutos</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="user-profile header-notification">
+                                <a href="#!" class="waves-effect waves-light">
+                                    <img src="~/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                                    <span>Usuario SAP</span>
+                                    <i class="ti-angle-down"></i>
+                                </a>
+                                <ul class="show-notification profile-notification">
+                                    <li class="waves-effect waves-light">
+                                        <a href="login.html">
+                                            <i class="ti-layout-sidebar-left"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <!-- Menu lateral inicio -->
+                    <!-- Menu lateral fin -->
+
+                    <div class="pcoded-content">
+                        <!-- Cabecera inicio -->
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <div class="page-header-title">
+                                            <h5 class="m-b-10">Dashboard</h5>
+                                            <p class="m-b-0">Control de Unidades</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <ul class="breadcrumb">
+                                            <li class="breadcrumb-item">
+                                                <a href="index.html"> <i class="fa fa-home"></i> </a>
+                                            </li>
+                                            <li class="breadcrumb-item">
+                                                <a href="#!">Proyecto#1</a>
+                                            </li>
+                                            <li class="breadcrumb-item">
+                                                <a href="#!">Torre#1</a>
+                                            </li>
+                                            <li class="breadcrumb-item">
+                                                <a href="#!">Unidades</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Cabecera fin -->
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page-body start -->
+                                    <div class="page-body" class="row">
+
+                                        @RenderBody()
+
+                                        <!-- ===================================================================================================================================== -->
+                                        <!-- SECTOR PROYECTOS INICIO -->
+                                        <!-- SECTOR PROYECTOS FIN -->
+                                        <!-- ===================================================================================================================================== -->
+                                        <!-- ===================================================================================================================================== -->
+                                        <!-- SECTOR UNIDADES INICIO -->
+                                        <!-- SECTOR UNIDADES FIN -->
+                                        <!-- ===================================================================================================================================== -->
+
+                                    </div>
+                                    <!-- Page-body end -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- PRUEBAS FIN =================================================================== -->
+
+
+
+
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - ControlDeUnidades - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
