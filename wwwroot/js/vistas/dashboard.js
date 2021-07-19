@@ -1,5 +1,10 @@
 ﻿$(document).ready(function () {
     /*
+     * LLAMADA A FUNCIONES ===============================================================================
+     */
+    obtenerProyectos();
+
+    /*
      * CSS ===============================================================================
      */
     //Ocultar todas las torres
@@ -118,3 +123,38 @@
         if (cont == 0) $(".Libres, .Asignados, .Reservados, .Formalizados, .Protocolizados").removeAttr("style");
     });
 });
+
+
+/*
+* FUNCIONES ===============================================================================
+*/
+
+// Obtiene todos los proyectos activos
+function obtenerProyectos(){
+    //Llamada al método obtenerProyectos desde el controlador
+    $.ajax({
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: "GET",
+        cache: false,
+        url: document.location.origin + '/Home/obtenerProyectos',
+        data: {},//{ "user": $("#txtUser").val(), "pass": $("#txtPass").val() },//JSON.stringify({ "user": $("#txtUser").val(), "pass": $("#txtPass").val() }),//datos,
+        success: function (data) {
+            if (data.success) {
+                //
+            }
+            //var obj = JSON.parse('{ "DocEntry": "2670", "DocNum": "74", "CardName": "Instituto de Previsión Social" }');
+            var obj = JSON.parse(data.responseText);
+            //alert(obj[0].DocEntry);
+
+            /*
+             {{"DocEntry":"2670","DocNum":"74","CardName":"Instituto de Previsión Social"},{"DocEntry":"2889","DocNum":"10000","CardName":"Instituto de Previsión Social"},{"DocEntry":"2671","DocNum":"75","CardName":"Instituto de Previsión Social"},{"DocEntry":"4212","DocNum":"10190","CardName":"Ministerio de Salud Pública y Bienestar Social"},{"DocEntry":"4213","DocNum":"10191","CardName":"Ministerio de Salud Pública y Bienestar Social"}}
+             */
+        },
+        error: function (jqXHR, exception) {
+            app.ajaxError(jqXHR, exception);
+        },
+        complete: function () {
+        }
+    });
+}

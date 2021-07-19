@@ -23,27 +23,49 @@ namespace ControlDeUnidades.Controllers
             _logger = logger;
         }
 
+        /*
+         * Control de logueo al cargar pagina
+         */
         public IActionResult Index()
         {
-            var funciones = new Functions();
-            Boolean Prueba;
-            DataTable dtPruebas = new DataTable();
-            /*
-            // Requires: using Microsoft.AspNetCore.Http;
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(SessionKey)))
-            {
-                HttpContext.Session.SetString(SessionKey, "user");
-                HttpContext.Session.SetString(SessionKeyName, "manager5");
-            }*/
-            //ViewBag.Message = HttpContext.Session.GetString("Test");
             string sesion = HttpContext.Session.GetString("Session");
             if(sesion != null) {
-                funciones.obtenerProyectos();
                 return View();
             } else return RedirectToAction("Index", "Login");
 
         }
 
+        /*
+         * Obtengo todos los proyectos
+         */
+        [HttpGet]
+        public IActionResult obtenerProyectos()
+        {
+            try
+            {
+                var funciones = new Functions();
+                // Obtengo los valores
+                var res = funciones.obtenerProyectos();
+                // Envio de valores en formato JSON
+                var json = Json(new
+                {
+                    success = true,
+                    responseText = res
+                });
+                return json;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                // En caso de error se envia el texto por JSON
+                var json = Json(new
+                {
+                    success = false,
+                    responseText = error
+                });
+                return json;
+            }
+        }
         public IActionResult Privacy()
         {
             return View();
