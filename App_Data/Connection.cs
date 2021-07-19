@@ -5,14 +5,29 @@ using System.Net;
 using System.Threading.Tasks;
 using RestSharp;
 using System.Data;
+using Sap.Data.Hana;
+using RestSharp.Authenticators;
+using Newtonsoft.Json.Linq;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
+using System.Data.Common;
+using System.Data.Odbc;
+using System.Data.SqlClient;
 
 namespace ControlDeUnidades.Controllers
 {
+    // hana c#
+    // https://blogs.sap.com/2014/10/16/bridging-the-gap-between-net-and-hana-using-c/
     public class Connection
     {
-        String Url = "Https://192.168.0.5:50000/b1s/v1";
-        IRestClient Request = new RestClient();
-        public Boolean Login()
+        String Url = "https://192.168.0.5:50000/b1s/v1";
+        String tokenString = "";
+        public static OdbcConnection hanaConn;
+
+        /*
+         * Realiza el logueo por SL
+         */
+        public Boolean Login(string user, string pass)
         {
             Boolean result;
             
@@ -21,15 +36,14 @@ namespace ControlDeUnidades.Controllers
                 string UrlLogin = Url + "/Login" ;
                 IRestClient Client = new RestClient(UrlLogin);
                 IRestRequest Request = new RestRequest("Auth/SignIn");
-
                 Request.Method = Method.POST;
                 Request.Parameters.Clear();
-
-                Request.AddParameter("application/json", "{\"CompanyDB\": \"LOCALIZACION\",\"UserName\": \"manager5\",\"Password\": \"12345\"}", ParameterType.RequestBody);
+                Request.AddParameter("application/json", "{\"CompanyDB\": \"LOCALIZACION\",\"UserName\": \""+user+"\",\"Password\": \""+pass+"\"}", ParameterType.RequestBody);
                 ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
                 var response = Client.Post(Request);
-
-                if (response.StatusCode.ToString() == "OK")
+                // Obtengo el token
+                tokenString = response.Content.Replace("\n","").Replace("\"", "").Replace("{", "").Replace("}", "").Split(',')[1].Split(':')[1].Replace(" ", String.Empty);
+                 if (response.StatusCode.ToString() == "OK")
                 {
                     
                     result = true;
@@ -45,20 +59,53 @@ namespace ControlDeUnidades.Controllers
             }
             return result;
         }
-        public DataTable Get(String Parametro)
+
+        /*
+         * Abre una conexion a SAP HANA
+         */
+        public OdbcConnection ConectaHANA()
         {
-            DataTable Tabla = new DataTable();
+            const string _strServerName = "192.168.0.5:30015";
+            const string _strLoginName = "SYSTEM";
+            const string _strPassword = "Passw0rd";
+            string strConnectionString = string.Empty;
             try
             {
-                IRestClient client = new RestClient();
-                IRestRequest Request = new RestRequest(Url);
-                var pruebas = client.Get(Request);
+                if (IntPtr.Size == 8)
+                {
+                    // 64-bit stuff
+                    strConnectionString = string.Concat(strConnectionString, "Driver={HDBODBC};");
+                }
+                else
+                {
+                    // 32-bit
+                    strConnectionString = string.Concat(strConnectionString, "Driver={HDBODBC32};");
+                }
+                strConnectionString = string.Concat(strConnectionString, "ServerNode=", _strServerName, ";");
+                strConnectionString = string.Concat(strConnectionString, "UID=", _strLoginName, ";");
+                strConnectionString = string.Concat(strConnectionString, "PWD=", _strPassword, ";");
+                hanaConn = new OdbcConnection(strConnectionString.ToString());
+                hanaConn.Open();
+                return hanaConn;
             }
             catch (Exception ex)
-            { 
-            
+            {
+                string error = ex.Message;
+                return hanaConn;
             }
-            return Tabla;
+            finally
+            {
+                //hanaConn.Dispose();
+            }
         }
+
+        /*
+         * Cierra la conexion
+         */
+        public void DesconectarHANA()
+        {
+            hanaConn.Close();
+        }
+
     }
-}
+}  

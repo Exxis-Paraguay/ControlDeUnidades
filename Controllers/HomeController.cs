@@ -7,6 +7,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using ControlDeUnidades.Controllers;
+using ControlDeUnidades.App_Data;
 
 namespace ControlDeUnidades.Controllers
 {
@@ -22,13 +25,22 @@ namespace ControlDeUnidades.Controllers
 
         public IActionResult Index()
         {
-            var Connection = new Connection();
+            var funciones = new Functions();
             Boolean Prueba;
             DataTable dtPruebas = new DataTable();
-
-            Prueba = Connection.Login();
-            return View();
-            //return RedirectToAction("Index", "Login");
+            /*
+            // Requires: using Microsoft.AspNetCore.Http;
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(SessionKey)))
+            {
+                HttpContext.Session.SetString(SessionKey, "user");
+                HttpContext.Session.SetString(SessionKeyName, "manager5");
+            }*/
+            //ViewBag.Message = HttpContext.Session.GetString("Test");
+            string sesion = HttpContext.Session.GetString("Session");
+            if(sesion != null) {
+                funciones.obtenerProyectos();
+                return View();
+            } else return RedirectToAction("Index", "Login");
 
         }
 
