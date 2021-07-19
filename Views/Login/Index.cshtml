@@ -38,6 +38,15 @@
     <link rel="stylesheet" type="text/css" href="~/icon/font-awesome/css/font-awesome.min.css">
     <!-- Style.css -->
     <link rel="stylesheet" type="text/css" href="~/css/style.css">
+    <!-- Required Jquery -->
+    <script type="text/javascript" src="~/js/jquery/jquery.min.js "></script>
+    <script type="text/javascript" src="~/js/jquery-ui/jquery-ui.min.js "></script>
+    <script type="text/javascript" src="~/js/popper.js/popper.min.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap/js/bootstrap.min.js "></script>
+
+    <!-- Login -->
+    <script type="text/javascript" src="~/js/vistas/login.js "></script>
+
 </head>
 
 <body themebg-pattern="theme1">
@@ -115,12 +124,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group form-primary">
-                                    <input type="text" name="email" class="form-control">
+                                    <input id="txtUser" type="text" name="email" class="form-control">
                                     <span class="form-bar"></span>
                                     <label class="float-label">Usuario</label>
                                 </div>
                                 <div class="form-group form-primary">
-                                    <input type="password" name="password" class="form-control">
+                                    <input id="txtPass" type="password" name="password" class="form-control">
                                     <span class="form-bar"></span>
                                     <label class="float-label">Contrase&ntilde;a</label>
                                 </div>
@@ -140,7 +149,12 @@
                                 </div>
                                 <div class="row m-t-30">
                                     <div class="col-md-12">
-                                        <button type="button" class="btn btn-primary btn-md btn-block waves-effect waves-light text-center m-b-20">Aceptar</button>
+                                        <button id="btnLogin" type="button" class="btn btn-primary btn-md btn-block waves-effect waves-light text-center m-b-20">Aceptar</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <label id="lbMsgLogin" class="text-danger"></label>
                                     </div>
                                 </div>
                             </div>
