@@ -5,7 +5,6 @@ using System.Net;
 using System.Threading.Tasks;
 using RestSharp;
 using System.Data;
-using Sap.Data.Hana;
 using RestSharp.Authenticators;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
@@ -65,9 +64,9 @@ namespace ControlDeUnidades.Controllers
          */
         public OdbcConnection ConectaHANA()
         {
-            const string _strServerName = "192.168.0.5:30015";
+            const string _strServerName = "172.16.20.3:30015";
             const string _strLoginName = "SYSTEM";
-            const string _strPassword = "Passw0rd";
+            const string _strPassword = "R3t41l.20";
             string strConnectionString = string.Empty;
             try
             {

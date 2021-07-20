@@ -29,9 +29,9 @@ namespace ControlDeUnidades.Controllers
         public IActionResult Index()
         {
             string sesion = HttpContext.Session.GetString("Session");
-            if(sesion != null) {
+            /*if(sesion != null) {*/
                 return View();
-            } else return RedirectToAction("Index", "Login");
+            /*} else return RedirectToAction("Index", "Login");*/
 
         }
 
