@@ -51,11 +51,7 @@ namespace ControlDeUnidades.App_Data
             {
                 string error = ex.Message;
                 con.DesconectarHANA();
-                return strJSON;
-            }
-            finally
-            {
-                con.DesconectarHANA();
+                return error;
             }
         }
 

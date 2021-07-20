@@ -44,12 +44,14 @@ namespace ControlDeUnidades.Controllers
             try
             {
                 var funciones = new Functions();
+                bool success = false;
                 // Obtengo los valores
                 var res = funciones.obtenerProyectos();
+                if (res.Contains("[")) success = true;
                 // Envio de valores en formato JSON
                 var json = Json(new
                 {
-                    success = true,
+                    success = success,
                     responseText = res
                 });
                 return json;

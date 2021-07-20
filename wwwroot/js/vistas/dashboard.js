@@ -128,7 +128,6 @@
 /*
 * FUNCIONES ===============================================================================
 */
-
 // Obtiene todos los proyectos activos
 function obtenerProyectos(){
     //Llamada al método obtenerProyectos desde el controlador
@@ -142,6 +141,8 @@ function obtenerProyectos(){
         success: function (data) {
             if (data.success) {
                 //
+            } else {
+                notificacion('Ha ocurrido un error inerperado: [' + data.responseText+']', 'danger');
             }
             //var obj = JSON.parse('{ "DocEntry": "2670", "DocNum": "74", "CardName": "Instituto de Previsión Social" }');
             var obj = JSON.parse(data.responseText);
@@ -158,3 +159,41 @@ function obtenerProyectos(){
         }
     });
 }
+
+
+
+
+function notificacion(message, type) { // type: danger, success
+    $.growl({
+        message: message
+    }, {
+        type: type,
+        allow_dismiss: false,
+        label: 'Cancel',
+        className: 'btn-xs btn-inverse',
+        placement: {
+            from: 'top',
+            align: 'right'
+        },
+        delay: 5500,
+        animate: {
+            enter: 'animated fadeInUp',
+            exit: 'animated fadeOutUp'
+        },
+        offset: {
+            x: 30,
+            y: 30
+        },
+        icon_type: 'class',
+        template: '<div data-growl="container" class="alert" role="alert">' +
+            '<button type="button" class="close" data-growl="dismiss">' +
+            '<span aria-hidden="true">&times;</span>' +
+            '<span class="sr-only">Close</span>' +
+            '</button>' +
+            '<span data-growl="icon"></span>' +
+            '<span data-growl="title"></span>' +
+            '<span data-growl="message"></span>' +
+            '<a href="#" data-growl="url"></a>' +
+            '</div>'
+    });
+};
