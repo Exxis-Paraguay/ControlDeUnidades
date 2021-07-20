@@ -20,12 +20,6 @@
     <Folder Include="Domain\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Sap.Data.Hana.v4.5">
-      <HintPath>C:\Users\USUARIO\Downloads\sap.data.hana.v4.5.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
