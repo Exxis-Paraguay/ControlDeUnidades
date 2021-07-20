@@ -27,7 +27,13 @@
         $("#dialogInfoUnidad").dialog();
     });
     //Evento click sobre los proyectos desde dashboard principal y menu
-    $(".item, .liProyNom a").click(function () {
+    /*$(".item, .liProyNom a").click(function () {
+        $("#sector-unidades").css("display", "inline");
+        $("#sector-proyectos").css("display", "none");
+        $(".buscador").val("");
+    });*/
+    $(".item, .liProyNom a").on("click", function () {
+        alert("probar");
         $("#sector-unidades").css("display", "inline");
         $("#sector-proyectos").css("display", "none");
         $(".buscador").val("");
@@ -124,45 +130,10 @@
     });
 });
 
-
 /*
-* FUNCIONES ===============================================================================
+* UTIL ===============================================================================
 */
-// Obtiene todos los proyectos activos
-function obtenerProyectos(){
-    //Llamada al método obtenerProyectos desde el controlador
-    $.ajax({
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        type: "GET",
-        cache: false,
-        url: document.location.origin + '/Home/obtenerProyectos',
-        data: {},//{ "user": $("#txtUser").val(), "pass": $("#txtPass").val() },//JSON.stringify({ "user": $("#txtUser").val(), "pass": $("#txtPass").val() }),//datos,
-        success: function (data) {
-            if (data.success) {
-                //
-            } else {
-                notificacion('Ha ocurrido un error inerperado: [' + data.responseText+']', 'danger');
-            }
-            //var obj = JSON.parse('{ "DocEntry": "2670", "DocNum": "74", "CardName": "Instituto de Previsión Social" }');
-            var obj = JSON.parse(data.responseText);
-            //alert(obj[0].DocEntry);
-
-            /*
-             {{"DocEntry":"2670","DocNum":"74","CardName":"Instituto de Previsión Social"},{"DocEntry":"2889","DocNum":"10000","CardName":"Instituto de Previsión Social"},{"DocEntry":"2671","DocNum":"75","CardName":"Instituto de Previsión Social"},{"DocEntry":"4212","DocNum":"10190","CardName":"Ministerio de Salud Pública y Bienestar Social"},{"DocEntry":"4213","DocNum":"10191","CardName":"Ministerio de Salud Pública y Bienestar Social"}}
-             */
-        },
-        error: function (jqXHR, exception) {
-            app.ajaxError(jqXHR, exception);
-        },
-        complete: function () {
-        }
-    });
-}
-
-
-
-
+// Notifica algun mensaje
 function notificacion(message, type) { // type: danger, success
     $.growl({
         message: message
@@ -197,3 +168,50 @@ function notificacion(message, type) { // type: danger, success
             '</div>'
     });
 };
+
+/*
+* FUNCIONES ===============================================================================
+*/
+// Obtiene todos los proyectos activos
+function obtenerProyectos(){
+    //Llamada al método obtenerProyectos desde el controlador
+    $.ajax({
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: "GET",
+        cache: false,
+        url: document.location.origin + '/Home/obtenerProyectos',
+        data: {},//{ "user": $("#txtUser").val(), "pass": $("#txtPass").val() },//JSON.stringify({ "user": $("#txtUser").val(), "pass": $("#txtPass").val() }),//datos,
+        success: function (data) {
+            if (data.success) {
+                // Limpio la lista
+                $('#listaProyectos').html("");
+                var proyecto = JSON.parse(data.responseText);
+                for (var i = 0; i < proyecto.length; i++) {
+                    var cod = proyecto[i].DocEntry;
+                    var nombre = proyecto[i].CardName;
+                    var porcentaje = proyecto[i].DocNum;
+                    var htmlProyecto = '<div id="' + cod + '" class="col-md-2 item"><div class="item card text-center order-visitor-card"><div class="card-block texto">' +
+                        '<h6 class="m-b-0"><label class="nombres">' + nombre + '</label></h6><p></p><h4 class="m-t-15 m-b-15">' +
+                        '<i class="fas fa-building m-r-15"></i></h4><p class="m-b-0">' + porcentaje + '% Libres</p></div> </div></div>';
+                    // Cargo la lista con los proyectos obtenidos
+                    $('#listaProyectos').append(htmlProyecto);
+                }
+            } else {
+                notificacion('Ha ocurrido un error inerperado: [' + data.responseText+']', 'danger');
+            }
+            //var obj = JSON.parse('{ "DocEntry": "2670", "DocNum": "74", "CardName": "Instituto de Previsión Social" }');
+            var obj = JSON.parse(data.responseText);
+            //alert(obj[0].DocEntry);
+
+            /*
+             {{"DocEntry":"2670","DocNum":"74","CardName":"Instituto de Previsión Social"},{"DocEntry":"2889","DocNum":"10000","CardName":"Instituto de Previsión Social"},{"DocEntry":"2671","DocNum":"75","CardName":"Instituto de Previsión Social"},{"DocEntry":"4212","DocNum":"10190","CardName":"Ministerio de Salud Pública y Bienestar Social"},{"DocEntry":"4213","DocNum":"10191","CardName":"Ministerio de Salud Pública y Bienestar Social"}}
+             */
+        },
+        error: function (jqXHR, exception) {
+            app.ajaxError(jqXHR, exception);
+        },
+        complete: function () {
+        }
+    });
+}
