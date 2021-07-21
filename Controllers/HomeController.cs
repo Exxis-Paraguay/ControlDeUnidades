@@ -68,6 +68,109 @@ namespace ControlDeUnidades.Controllers
                 return json;
             }
         }
+
+        /*
+         * Obtengo las torres por proyecto seleccionado
+         */
+        [HttpGet]
+        public IActionResult obtenerTorres(string idProyecto)
+        {
+            try
+            {
+                var funciones = new Functions();
+                bool success = false;
+                // Obtengo los valores
+                var res = funciones.obtenerProyectos();
+                if (res.Contains("[")) success = true;
+                // Envio de valores en formato JSON
+                var json = Json(new
+                {
+                    success = success,
+                    responseText = res
+                });
+                return json;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                // En caso de error se envia el texto por JSON
+                var json = Json(new
+                {
+                    success = false,
+                    responseText = error
+                });
+                return json;
+            }
+        }
+
+        /*
+         * Obtengo las unidades por torre seleccionada
+         */
+        [HttpGet]
+        public IActionResult obtenerUnidades(string idTorre)
+        {
+            try
+            {
+                var funciones = new Functions();
+                bool success = false;
+                // Obtengo los valores
+                var res = funciones.obtenerUnidades(idTorre);
+                if (res.Contains("[")) success = true;
+                // Envio de valores en formato JSON
+                var json = Json(new
+                {
+                    success = success,
+                    responseText = res
+                });
+                return json;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                // En caso de error se envia el texto por JSON
+                var json = Json(new
+                {
+                    success = false,
+                    responseText = error
+                });
+                return json;
+            }
+        }
+
+        /*
+         * Obtengo las unidades por torre seleccionada
+         */
+        [HttpGet]
+        public IActionResult obtenerInfoUnidades(string idUnidad)
+        {
+            try
+            {
+                var funciones = new Functions();
+                bool success = false;
+                // Obtengo los valores
+                var res = funciones.obtenerUnidades(idUnidad);
+                if (res.Contains("[")) success = true;
+                // Envio de valores en formato JSON
+                var json = Json(new
+                {
+                    success = success,
+                    responseText = res
+                });
+                return json;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                // En caso de error se envia el texto por JSON
+                var json = Json(new
+                {
+                    success = false,
+                    responseText = error
+                });
+                return json;
+            }
+        }
+
         public IActionResult Privacy()
         {
             return View();
