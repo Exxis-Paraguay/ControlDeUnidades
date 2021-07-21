@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿// Variables Globales
+var _nombreProy, _nombreTorre = "";
+$(document).ready(function () {
     /*
      * LLAMADA A FUNCIONES ===============================================================================
      */
@@ -23,12 +25,15 @@
     // Ocultar menu lateral
     $("#mobile-collapse").click();
     // Click sobre unidad aparece modal
-    $(".pointDash").click(function () {
+    $('body').on('click', '.pointDash', function () {
+        var idUnidad = $("#" + $(this).attr("id") + " input").val();
+        obtenerInfoUnidades(idUnidad);
         $("#dialogInfoUnidad").dialog();
     });
     //Evento click sobre los proyectos desde dashboard principal y menu
     $('body').on('click', '.item, .liProyNom a', function () {
         var idProy = $(this).attr('id').split('-')[1];
+        _nombreProy = $("#" + $(this).attr('id') + " .nombres").text();
         $("#sector-unidades").css("display", "inline");
         $("#sector-proyectos").css("display", "none");
         $(".buscador").val("");
@@ -38,6 +43,12 @@
     //Evento click sobre las torres
     $('body').on('click', '.item-torre', function () {
         var idTorre = $(this).attr('id').split('-')[1];
+        _nombreTorre = $("#" + $(this).attr('id') + " .nombres-torre").text();
+        // Asignar el nombre al titulo de las unidades
+        $("#tituloUnidades").text("Proyecto: " + _nombreProy + " - Torre: " + _nombreTorre);
+        // Asignar el titulo al modal
+        $("#tituloModalUnidad").text(_nombreProy + " - " + _nombreTorre);
+
         $("#torre1").css("display", "inline");
         $(".seccion-buscar-torre").css("display", "none");
         $("#buscador-torre").val("");
@@ -53,6 +64,7 @@
     $("#btnVolverFiltroTorres").click(function () {
         $(".torre").css("display", "none");
         $(".seccion-buscar-torre").css("display", "inline");
+        return false;
     });
 
     /*
@@ -251,7 +263,6 @@ function obtenerTorres(idProyecto) {
 
 // Obtiene todas las unidades por torre seleccionada
 function obtenerUnidades(idTorre) {
-    var htmlUnidadesLista = "";
     var pisoActual = "0";
     var htmlPiso, htmlUnidades = "";
     var flagNewTr = parseInt(0);
@@ -275,40 +286,110 @@ function obtenerUnidades(idTorre) {
                 for (var i = 0; i < proyecto.length; i++) {
                     var numero = proyecto[i].numero;
                     var piso = proyecto[i].piso;
-                    var estado = proyecto[i].estado;
-                    var tipo = proyecto[i].tipo;
+                    var estadoCod = proyecto[i].estado;
+                    var estado = "";
+                    var classEstado = "";
+                    var iconEstado = "";
+                    var tipoCod = proyecto[i].tipo;
+                    var tipo = "";
                     nuevoTr = false;
-                    //alert("NO ENTRO " + pisoActual + " --- " + piso);
+                    // Control case para estados
+                    switch (estadoCod) {
+                        case '01':
+                            estado = "Libres";
+                            classEstado = "bg-c-green";
+                            break;
+                        case '04':
+                            estado = "Asignados";
+                            classEstado = "bg-c-yellow";
+                            iconEstado = '<i class="fas fa-close text-c-red mat-icon f-24"></i>';
+                            break;
+                        case '08':
+                            estado = "Formalizados";
+                            classEstado = "bg-c-red";
+                            break;
+                        default:
+                    }
+                    // Control case para tipos
+                    switch (tipoCod) {
+                        case '140':
+                            tipo = "Piso";
+                            break;
+                        default:
+                    }
                     // Si el piso es diferente a la actual, crear html donde se muestra el numero de Piso
                     if (pisoActual != piso) {
-                        
                         if (flagNewTr == 0) {
-                            //alert("PISO " + piso);
                             htmlPiso = '<tr class="Pisos"><td class="text-center text-white bg-c-purple ">' +
-                                '<i class="fas fa-building mat-icon f-24"></i><h6>Piso ' + piso + '</h6></td>';
+                                '<i class="fas fa-building mat-icon f-24"></i><h6>' + tipo+' ' + piso + '</h6></td>';
+                            flagNewTr++;
                         } else {
-                            //alert("FIN PISO " + piso);
                             htmlTablaFinal = htmlPiso + htmlUnidades + "</tr>";
+                            // Cargo la tabla con las unidades obtenidas
                             $('#tablaUnidades tbody').append(htmlTablaFinal);
                             htmlTablaFinal = "";
                             htmlPiso = "";
                             htmlUnidades = "";
                             flagNewTr = 0;
                             nuevoTr = true;
+                            pisoActual = "0";
+                            // primer depto del nuevo piso
+                            htmlUnidades += '<td id="und-' + numero.replace(/ /g, '') + '" class="text-center text-white ' + classEstado+' ' + estado+' pointDash">' +
+                                iconEstado+'<h6>' + numero + '</h6></td>';
                         }
-                        flagNewTr++;
                     }
                     if (!nuevoTr) {
-                        //alert("DEPARTAMENTOS DEL PISO " + piso);
-                        htmlUnidades += '<td id="und-' + numero+'" class="text-center text-white bg-c-yellow Asignados pointDash">'+
-                        '<i class="fas fa-close text-c-red mat-icon f-24"></i><h6>' + numero+'</h6></td>';
-                        htmlUnidadesLista = "";
+                        htmlUnidades += '<td id="und-' + numero.replace(/ /g, '') + '" class="text-center text-white ' + classEstado + ' ' + estado +' pointDash">'+
+                            iconEstado + '<h6>' + numero + '</h6><input type="hidden" id="custId" name="custId" value="' + numero+'"></td>';
                         pisoActual = piso;
+                        if ((proyecto.length - 1) == i) {
+                            htmlTablaFinal = htmlPiso + htmlUnidades + "</tr>";
+                            // Cargo la tabla con las unidades obtenidas
+                            $('#tablaUnidades tbody').append(htmlTablaFinal);
+                        }
                     }
                 }
-                // Cargo la lista con las unidades obtenidas
-                //$('#tablaUnidades tbody').prepend(htmlUnidadesLista);
-                $('#tablaUnidades tbody').append(htmlUnidadesLista);
+            } else {
+                notificacion('Ha ocurrido un error inerperado: [' + data.responseText + ']', 'danger');
+            }
+        },
+        error: function (jqXHR, exception) {
+            app.ajaxError(jqXHR, exception);
+        }
+    });
+}
+
+// Obtiene la información de la unidad seleccionada
+function obtenerInfoUnidades(idUnidad) {
+    //Llamada al método obtenerProyectos desde el controlador
+    $.ajax({
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: "GET",
+        cache: false,
+        url: document.location.origin + '/Home/obtenerInfoUnidades',
+        data: { "idUnidad": idUnidad},
+        success: function (data) {
+            if (data.success) {
+                // Limpio la lista
+                $('#listaProyectos, #menuProyectos').html("");
+                // Convierto a JSON
+                var proyecto = JSON.parse(data.responseText);
+                // Recorro los datos y los voy cargando
+                for (var i = 0; i < proyecto.length; i++) {
+                    var cod = proyecto[i].DocEntry;
+                    var nombre = proyecto[i].CardName;
+                    var porcentaje = proyecto[i].DocNum;
+                    var htmlProyectoLista = '<div id="proyList-' + cod + '" class="col-md-2 item"><div class="card text-center order-visitor-card"><div class="card-block texto">' +
+                        '<h6 class="m-b-0"><label class="nombres">' + nombre + '</label></h6><p></p><h4 class="m-t-15 m-b-15">' +
+                        '<i class="fas fa-building m-r-15"></i></h4><p class="m-b-0">' + porcentaje + '% Libres</p></div> </div></div>';
+                    var htmlProyectoMenu = '<li class="liProyNom"><a id="proyMenu-' + cod + '" href="#" class="waves-effect waves-dark"><span class="pcoded-micon"><i class="ti-angle-right"></i></span>' +
+                        '<span class="pcoded-mtext">' + nombre + '</span><span class="pcoded-mcaret"></span></a></li>';
+                    // Cargo la lista con los proyectos obtenidos
+                    $('#listaProyectos').append(htmlProyectoLista);
+                    // Cargo la lista con los proyectos en el menu
+                    $('#menuProyectos').append(htmlProyectoMenu);
+                }
             } else {
                 notificacion('Ha ocurrido un error inerperado: [' + data.responseText + ']', 'danger');
             }

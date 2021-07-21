@@ -73,7 +73,7 @@ namespace ControlDeUnidades.App_Data
             try
             {
                 string queryObtProy = "SELECT o.\"ItemCode\" AS \"numero\", o.\"U_Piso\" AS \"piso\", " +
-                    "o.\"U_Status\" AS \"estado\",o.\"ItmsGrpCod\" AS \"tipo\" FROM \"CP\".OITM o WHERE o.\"U_Torre\" = " + idTorre;
+                    "o.\"U_Status\" AS \"estado\",o.\"ItmsGrpCod\" AS \"tipo\" FROM \"CP\".OITM o WHERE o.\"U_Torre\" = " + idTorre+ " order by o.\"U_Piso\"";
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
