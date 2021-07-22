@@ -23,8 +23,8 @@
     <!-- themify icon -->
     <link rel="stylesheet" type="text/css" href="~/icon/themify-icons/themify-icons.css">
     <!-- font-awesome-n -->
-    <!--<link rel="stylesheet" type="text/css" href="~/css/font-awesome-n.min.css">
-    <link rel="stylesheet" type="text/css" href="~/css/font-awesome.min.css">-->
+    <link rel="stylesheet" type="text/css" href="~/css/font-awesome-n.min.css">
+    <link rel="stylesheet" type="text/css" href="~/css/font-awesome.min.css">
     <!-- Notification.css -->
     <link rel="stylesheet" type="text/css" href="~/pages/notification/notification.css">
 
@@ -341,7 +341,7 @@
 
 
     <!-- Inicio Modal ------------------------------------------------------------------------------------------------------- -->
-    <div id="dialogInfoUnidad" class="modal-info-unidad" title="Información de Unidad">
+    <div id="dialogInfoUnidad" class="modal-info-unidad" title="">
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -357,85 +357,32 @@
                                 <div class="col-lg-12 col-xl-12">
                                     <!-- Nav tabs -->
                                     <ul class="nav nav-tabs  tabs" role="tablist">
-                                        <li class="nav-item">
+                                        <li id="tabModalInfo" class="nav-item">
                                             <a class="nav-link active" data-toggle="tab" href="#infoUnidad" role="tab">Informaci&oacute;n</a>
                                         </li>
-                                        <li class="nav-item">
+                                        <li id="tabModalDoc" class="nav-item">
                                             <a class="nav-link" data-toggle="tab" href="#docUnidad" role="tab">Documentos</a>
                                         </li>
                                     </ul>
-                                    <!-- Tab panes -->
+                                    <!-- Pestañas -->
                                     <div class="tab-content tabs card-block">
+                                        <!-- Tab Informacion de la Unidad -->
                                         <div class="tab-pane active" id="infoUnidad" role="tabpanel">
-                                            <ul class="list-group list-group-flush">
-                                                <li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: Juan Perez</li>
-                                                <li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: Carlos Pereira</li>
-                                                <li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: 02/02/2013</li>
-                                                <li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: 2.500 $</li>
+                                            <ul id="liInfoDes" class="list-group list-group-flush">
+                                                
                                             </ul>
                                         </div>
+                                        <!-- Tab Documentos Relacionado -->
                                         <div class="tab-pane" id="docUnidad" role="tabpanel">
                                             <div class="col-xl-12 col-md-12">
                                                 <div class="card table-card">
                                                     <div class="card-header">
-                                                        <h5>Juan Perez</h5>
+                                                        <h5>#CLIENTE#</h5>
                                                     </div>
                                                     <div class="card-block">
                                                         <div class="table-responsive">
-                                                            <table class="table table-hover m-b-0 without-header">
+                                                            <table id="tblModalDocumentos" class="table table-hover m-b-0 without-header">
                                                                 <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <div class="d-inline-block align-middle">
-                                                                                <i class="far fa-file-alt text-c-red f-24"></i>
-                                                                                <div class="d-inline-block">
-                                                                                    <p class="text-muted m-b-0">Factura Nro: 001-005-213548</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td class="text-right">
-                                                                            <h6 class="f-w-700">$1.500</h6>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <div class="d-inline-block align-middle">
-                                                                                <i class="far fa-file-alt text-c-blue f-24"></i>
-                                                                                <div class="d-inline-block">
-                                                                                    <p class="text-muted m-b-0">Nota Cr&eacute;dito Nro: 958745</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td class="text-right">
-                                                                            <h6 class="f-w-700">$1.500</h6>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <div class="d-inline-block align-middle">
-                                                                                <i class="far fa-file-alt text-c-red f-24"></i>
-                                                                                <div class="d-inline-block">
-                                                                                    <p class="text-muted m-b-0">Documento Nro: 001-005-854712</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td class="text-right">
-                                                                            <h6 class="f-w-700">$2.700</h6>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <div class="d-inline-block align-middle">
-                                                                                <i class="far fa-file-alt text-c-red f-24"></i>
-                                                                                <div class="d-inline-block">
-                                                                                    <p class="text-muted m-b-0">Documento Nro: 001-003-987741</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td class="text-right">
-                                                                            <h6 class="f-w-700">$5.500</h6>
-                                                                        </td>
-                                                                    </tr>
                                                                 </tbody>
                                                             </table>
 
@@ -443,6 +390,12 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <!-- Boton cerrar -->
+                                    <div class="row">
+                                        <div class="col-lg-12 col-xl-12 text-right">
+                                            <button id="btnCerrarModalInfo" type="button" class="btn btn-dark">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>

@@ -101,8 +101,41 @@ namespace ControlDeUnidades.App_Data
             }
         }
 
-        
 
+        /*
+         * Obtiene todas las torres
+         */
+        public string obtenerTorres(string idProy)
+        {
+            int flag = 0;
+            string col = "";
+            string strJSON = "";
+            try
+            {
+                string queryObtProy = "SELECT DISTINCT o.\"U_Torre\" as \"CodigoTorre\" FROM \"CP\".OITM o WHERE o.\"U_Torre\" > 0";
+                OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
+                OdbcDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    string codigoTorre = "\"CodigoTorre\":\"" + reader[0].ToString() + "\"";
+
+                    string row = "{" + codigoTorre + "}";
+
+                    if (flag > 0) col += "," + row;
+                    else col += row;
+                    flag++;
+                }
+                strJSON = "[" + col + "]";
+                con.DesconectarHANA();
+                return strJSON;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                con.DesconectarHANA();
+                return error;
+            }
+        }
 
         public static String json_encode(OdbcDataReader reader, String[] columns)
         {

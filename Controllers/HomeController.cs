@@ -80,7 +80,7 @@ namespace ControlDeUnidades.Controllers
                 var funciones = new Functions();
                 bool success = false;
                 // Obtengo los valores
-                var res = funciones.obtenerProyectos();
+                var res = funciones.obtenerTorres(idProyecto);
                 if (res.Contains("[")) success = true;
                 // Envio de valores en formato JSON
                 var json = Json(new
