@@ -1,5 +1,5 @@
 ﻿// Variables Globales
-var _nombreProy, _nombreTorre = "";
+var _nombreProy, _nombreTorre, _idProy, _idTorre = "";
 $(document).ready(function () {
     /*
      * LLAMADA A FUNCIONES ===============================================================================
@@ -31,6 +31,7 @@ $(document).ready(function () {
     $('body').on('click', '.item, .liProyNom a', function () {
         var idProy = $(this).attr('id').split('-')[1];
         _nombreProy = $("#" + $(this).attr('id') + " .nombres").text();
+        _idProy = idProy;
         /*$("#sector-unidades").css("display", "inline");
         $("#sector-proyectos").css("display", "none");*/
 
@@ -49,6 +50,7 @@ $(document).ready(function () {
     $('body').on('click', '.item-torre', function () {
         var idTorre = $(this).attr('id').split('-')[1];
         _nombreTorre = $("#" + $(this).attr('id') + " .nombres-torre").text();
+        _idTorre = idTorre;
         // Asignar el nombre al titulo de las unidades
         $("#tituloUnidades").text("Proyecto: " + _nombreProy + " - Torre: " + _nombreTorre);
         // Asignar el titulo al modal
@@ -401,6 +403,7 @@ function obtenerUnidades(idTorre) {
     });
 }
 
+// Arma el breadcrumb de l pagina
 function breadcrumb(page) {
     $('#breadcrumbPrin').html("");
     var bd0 = '<li class="breadcrumb-item"><a href="index.html"> <i class="fa fa-home"></i> </a></li>';
@@ -462,6 +465,44 @@ function obtenerInfoUnidades(idUnidad) {
                 // Agregar pestañas al modal
                 $("#liInfoDes").append(liInfo);
                 $('#tblModalDocumentos tbody').append(docu + docu + docu + docu);
+            } else {
+                notificacion('Ha ocurrido un error inerperado: [' + data.responseText + ']', 'danger');
+            }
+        },
+        error: function (jqXHR, exception) {
+            app.ajaxError(jqXHR, exception);
+        }
+    });
+}
+
+// Arma el macroproyecto
+function macroproyectosDatos(idProy, idTorre) {
+    // Datos por proyecto .datos-por-proyecto
+
+    // Datos por torre .datos-por-proyecto
+
+    $.ajax({
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: "GET",
+        cache: false,
+        url: document.location.origin + '/Home/obtenerMacroproyecto',
+        data: { "idProy": idProy, "idTorre": idTorre },
+        success: function (data) {
+            if (data.success) {
+                // Limpio la lista
+                $('#listaTorres').html("");
+                // Convierto a JSON
+                var proyecto = JSON.parse(data.responseText);
+                // Recorro los datos y los voy cargando
+                for (var i = 0; i < proyecto.length; i++) {
+                    var cod = proyecto[i].CodigoTorre;
+                    var htmlProyectoLista = '<div id="torre-' + cod + '" class="col-md-2 item-torre"><div class="card text-center order-visitor-card">' +
+                        '<div class="card-block texto-torre"><h6 class="m-b-0"><label class="nombres-torre">Torre# ' + cod + '</label></h6><p></p>' +
+                        '<h4 class="m-t-15 m-b-15"><i class="fas fa-building m-r-15"></i></h4><p class="m-b-0">n Libres</p></div></div></div>';
+                    // Cargo la lista con las torres obtenidas
+                    $('#listaTorres').append(htmlProyectoLista);
+                }
             } else {
                 notificacion('Ha ocurrido un error inerperado: [' + data.responseText + ']', 'danger');
             }

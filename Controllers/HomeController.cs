@@ -141,14 +141,14 @@ namespace ControlDeUnidades.Controllers
          * Obtengo las unidades por torre seleccionada
          */
         [HttpGet]
-        public IActionResult obtenerInfoUnidades(string idUnidad)
+        public IActionResult obtenerMacroproyecto(string idProy, string idTorre)
         {
             try
             {
                 var funciones = new Functions();
                 bool success = false;
                 // Obtengo los valores
-                var res = funciones.obtenerUnidades(idUnidad);
+                var res = funciones.obtenerMacroproyecto(idProy, idTorre);
                 if (res.Contains("[")) success = true;
                 // Envio de valores en formato JSON
                 var json = Json(new
@@ -171,6 +171,7 @@ namespace ControlDeUnidades.Controllers
             }
         }
 
+        
         public IActionResult Privacy()
         {
             return View();

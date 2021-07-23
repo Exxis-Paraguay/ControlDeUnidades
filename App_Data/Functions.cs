@@ -103,6 +103,43 @@ namespace ControlDeUnidades.App_Data
 
 
         /*
+         * Obtiene todos los datos para crear el MAcroproyecto
+         */
+        public string obtenerMacroproyecto(string idProy, string idTorre)
+        {
+            int flag = 0;
+            string col = "";
+            string strJSON = "";
+            try
+            {
+                string queryObtProy = "SELECT o.\"U_Status\" AS \"estado\", count(o.\"U_Status\") AS \"cantidad\""+
+                "FROM OITM o WHERE o.\"U_Torre\" = "+ idTorre + " group BY o.\"U_Status\"";
+                OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
+                OdbcDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    string estado = "\"estado\":\"" + reader[0].ToString() + "\",";
+                    string cantidad = "\"cantidad\":\"" + reader[1].ToString() + "\",";
+
+                    string row = "{" + estado + cantidad + "}";
+
+                    if (flag > 0) col += "," + row;
+                    else col += row;
+                    flag++;
+                }
+                strJSON = "[" + col + "]";
+                con.DesconectarHANA();
+                return strJSON;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                con.DesconectarHANA();
+                return error;
+            }
+        }
+
+        /*
          * Obtiene todas las torres
          */
         public string obtenerTorres(string idProy)
