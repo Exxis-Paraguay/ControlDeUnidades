@@ -11,7 +11,6 @@
     $(".logout").click(function () {
         logout();
     });
-    
 });
 
 /*

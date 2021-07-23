@@ -9,14 +9,16 @@ $(document).ready(function () {
     /*
      * CSS ===============================================================================
      */
-    //Ocultar todas las torres
-    $(".torre").css("display", "none");
+    
     $("#bellNotificacion").css("display", "none");
     // Ocultar modal
     $("#dialogInfoUnidad").css("display", "none");
     // Ocultar Sector Unidades
     $("#sector-unidades").css("display", "none");
-    
+    //Ocultar todas las torres
+    $(".torre").css("display", "none");
+    // Crear breadcrumb
+    breadcrumb('home');
 
     /*
      * EVENTOS ===============================================================================
@@ -29,11 +31,19 @@ $(document).ready(function () {
     $('body').on('click', '.item, .liProyNom a', function () {
         var idProy = $(this).attr('id').split('-')[1];
         _nombreProy = $("#" + $(this).attr('id') + " .nombres").text();
+        /*$("#sector-unidades").css("display", "inline");
+        $("#sector-proyectos").css("display", "none");*/
+
+        $(".torre").css("display", "none");
+        $(".seccion-buscar-torre").css("display", "inline");
         $("#sector-unidades").css("display", "inline");
         $("#sector-proyectos").css("display", "none");
+
         $(".buscador").val("");
         // Obtengo las torres del proyecto seleccionado
-        obtenerTorres(idProy)
+        obtenerTorres(idProy);
+        // Crear breadcrumb
+        breadcrumb('proyecto');
     });
     //Evento click sobre las torres
     $('body').on('click', '.item-torre', function () {
@@ -48,6 +58,8 @@ $(document).ready(function () {
         $(".seccion-buscar-torre").css("display", "none");
         $("#buscador-torre").val("");
         obtenerUnidades(idTorre);
+        // Crear breadcrumb
+        breadcrumb('unidad');
     });
     // Click sobre unidad aparece modal
     $('body').on('click', '.pointDash', function () {
@@ -65,11 +77,18 @@ $(document).ready(function () {
         $("#sector-unidades").css("display", "none");
         $("#sector-proyectos").css("display", "inline");
         $(".buscador").val("");
+        // Crear breadcrumb
+        breadcrumb('home');
+    });
+    $("#buscadorLat").click(function () {
+        return false;
     });
     // Evento click del boton volver de la pantalla unidades
     $("#btnVolverFiltroTorres").click(function () {
         $(".torre").css("display", "none");
         $(".seccion-buscar-torre").css("display", "inline");
+        // Crear breadcrumb
+        breadcrumb('proyecto');
         return false;
     });
 
@@ -78,8 +97,18 @@ $(document).ready(function () {
      */
     // Buscador Proyecto
     $('.buscador').keyup(function () {
+        /*$("#sector-unidades").css("display", "none");
+        $("#sector-proyectos").css("display", "inline");*/
+
+
+        $(".torre").css("display", "none");
+        $(".seccion-buscar-torre").css("display", "inline");
         $("#sector-unidades").css("display", "none");
         $("#sector-proyectos").css("display", "inline");
+
+
+        // Crear breadcrumb
+        breadcrumb('home');
         var nombres = $('.nombres');
         var buscando = $(this).val();
         var item = '';
@@ -333,13 +362,13 @@ function obtenerUnidades(idTorre) {
                     // Si el piso es diferente a la actual, crear html donde se muestra el numero de Piso
                     if (pisoActual != piso) {
                         if (flagNewTr == 0) {
-                            htmlPiso = '<tr class="Pisos"><td class="text-center text-white bg-c-purple ">' +
+                            htmlPiso = '<tr class="Pisos"><td class="text-center text-white bg-c-purple tipo-unidad">' +
                                 '<i class="fas fa-building mat-icon f-24"></i><h6>' + tipo+' ' + piso + '</h6></td>';
                             flagNewTr++;
                         } else {
                             htmlTablaFinal = htmlPiso + htmlUnidades + "</tr>";
                             // Cargo la tabla con las unidades obtenidas
-                            $('#tablaUnidades tbody').append(htmlTablaFinal);
+                            $('#tablaUnidades tbody').prepend(htmlTablaFinal);
                             htmlTablaFinal = "";
                             htmlPiso = "";
                             htmlUnidades = "";
@@ -358,7 +387,7 @@ function obtenerUnidades(idTorre) {
                         if ((proyecto.length - 1) == i) {
                             htmlTablaFinal = htmlPiso + htmlUnidades + "</tr>";
                             // Cargo la tabla con las unidades obtenidas
-                            $('#tablaUnidades tbody').append(htmlTablaFinal);
+                            $('#tablaUnidades tbody').prepend(htmlTablaFinal);
                         }
                     }
                 }
@@ -370,6 +399,32 @@ function obtenerUnidades(idTorre) {
             app.ajaxError(jqXHR, exception);
         }
     });
+}
+
+function breadcrumb(page) {
+    $('#breadcrumbPrin').html("");
+    var bd0 = '<li class="breadcrumb-item"><a href="index.html"> <i class="fa fa-home"></i> </a></li>';
+    var bd1 = '<li class="breadcrumb-item"><a href="#!">' + _nombreProy+'</a></li>';
+    var bd2 = '<li class="breadcrumb-item"><a href="#!">' + _nombreTorre+'</a></li>';
+    var bd3 = '<li class="breadcrumb-item"><a href="#!">Unidades</a></li>';
+
+
+    // Control case para estados
+    switch (page) {
+        case 'home':
+            $('#breadcrumbPrin').append(bd0);
+            break;
+        case 'proyecto':
+            $('#breadcrumbPrin').append(bd0 + bd1);
+            break;
+        case 'torre':
+            $('#breadcrumbPrin').append(bd0 + bd1 + bd2);
+            break;
+        case 'unidad':
+            $('#breadcrumbPrin').append(bd0 + bd1 + bd2 + bd3);
+            break;
+        default:
+    }
 }
 
 // Obtiene la información de la unidad seleccionada

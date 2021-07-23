@@ -112,7 +112,7 @@
                 <div class="col-sm-12">
                     <!-- Authentication card start -->
 
-                    <form class="md-float-material form-material">
+                    <form name="formLogin" class="md-float-material form-material">
                         <div class="text-center">
                             <img src="~/images/logo.png" alt="logo.png">
                         </div>
@@ -123,15 +123,26 @@
                                         <h3 class="text-center">Login</h3>
                                     </div>
                                 </div>
+
+
                                 <div class="form-group form-primary">
-                                    <input id="txtUser" type="text" name="email" class="form-control">
+                                    <select class="form-control form-control-lg">
+                                        <option></option>
+                                        <option>CP</option>
+                                    </select>
                                     <span class="form-bar"></span>
-                                    <label class="float-label">Usuario</label>
+                                    <label class="float-label">Base de Datos</label>
+                                </div>
+
+                                <div class="form-group form-primary">
+                                    <input id="txtUser" type="text" name="usuario" class="form-control">
+                                    <span class="form-bar"></span>
+                                    <label for="usuario" class="float-label">Usuario</label>
                                 </div>
                                 <div class="form-group form-primary">
                                     <input id="txtPass" type="password" name="password" class="form-control">
                                     <span class="form-bar"></span>
-                                    <label class="float-label">Contrase&ntilde;a</label>
+                                    <label for="password" class="float-label">Contrase&ntilde;a</label>
                                 </div>
                                 <div class="row m-t-25 text-left" style="display: none;">
                                     <div class="col-12">
