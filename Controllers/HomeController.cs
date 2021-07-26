@@ -171,7 +171,40 @@ namespace ControlDeUnidades.Controllers
             }
         }
 
-        
+        /*
+         * Obtengo las unidades por torre seleccionada
+         */
+        [HttpGet]
+        public IActionResult obtenerInfoUnidades(string idUnidad)
+        {
+            try
+            {
+                var funciones = new Functions();
+                bool success = false;
+                // Obtengo los valores
+                var res = funciones.obtenerUnidades(idUnidad);
+                if (res.Contains("[")) success = true;
+                // Envio de valores en formato JSON
+                var json = Json(new
+                {
+                    success = success,
+                    responseText = res
+                });
+                return json;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                // En caso de error se envia el texto por JSON
+                var json = Json(new
+                {
+                    success = false,
+                    responseText = error
+                });
+                return json;
+            }
+        }
+
         public IActionResult Privacy()
         {
             return View();
