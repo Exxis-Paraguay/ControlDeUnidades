@@ -107,14 +107,14 @@ namespace ControlDeUnidades.Controllers
          * Obtengo las unidades por torre seleccionada
          */
         [HttpGet]
-        public IActionResult obtenerUnidades(string idTorre)
+        public IActionResult obtenerUnidades(string idTorre, string idProyecto)
         {
             try
             {
                 var funciones = new Functions();
                 bool success = false;
                 // Obtengo los valores
-                var res = funciones.obtenerUnidades(idTorre);
+                var res = funciones.obtenerUnidades(idTorre, idProyecto);
                 if (res.Contains("[")) success = true;
                 // Envio de valores en formato JSON
                 var json = Json(new
@@ -175,14 +175,14 @@ namespace ControlDeUnidades.Controllers
          * Obtengo las unidades por torre seleccionada
          */
         [HttpGet]
-        public IActionResult obtenerInfoUnidades(string idUnidad)
+        public IActionResult obtenerInfoUnidades(string idUnidad, string idProyecto)
         {
             try
             {
                 var funciones = new Functions();
                 bool success = false;
                 // Obtengo los valores
-                var res = funciones.obtenerUnidades(idUnidad);
+                var res = funciones.obtenerUnidades(idUnidad, idProyecto);
                 if (res.Contains("[")) success = true;
                 // Envio de valores en formato JSON
                 var json = Json(new

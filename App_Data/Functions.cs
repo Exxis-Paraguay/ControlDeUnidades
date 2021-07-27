@@ -111,7 +111,7 @@ namespace ControlDeUnidades.App_Data
             string strJSON = "";
             try
             {
-                string queryObtProy = string.Format("SP_MacroProyecto({0},{1})",idProy, idTorre);
+                string queryObtProy = string.Format("CALL CP.SP_MacroProyecto({0},{1})",idProy, idTorre);
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
