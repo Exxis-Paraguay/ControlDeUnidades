@@ -19,7 +19,7 @@ namespace ControlDeUnidades.Controllers
     // https://blogs.sap.com/2014/10/16/bridging-the-gap-between-net-and-hana-using-c/
     public class Connection
     {
-        String Url = "https://192.168.0.5:50000/b1s/v1";
+        String Url = "https://172.16.20.3:50000/b1s/v1";
         String tokenString = "";
         public static OdbcConnection hanaConn;
 
@@ -37,7 +37,7 @@ namespace ControlDeUnidades.Controllers
                 IRestRequest Request = new RestRequest("Auth/SignIn");
                 Request.Method = Method.POST;
                 Request.Parameters.Clear();
-                Request.AddParameter("application/json", "{\"CompanyDB\": \"LOCALIZACION\",\"UserName\": \""+user+"\",\"Password\": \""+pass+"\"}", ParameterType.RequestBody);
+                Request.AddParameter("application/json", "{\"CompanyDB\": \"CP\",\"UserName\": \""+user+"\",\"Password\": \""+pass+"\"}", ParameterType.RequestBody);
                 ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
                 var response = Client.Post(Request);
                 // Obtengo el token
