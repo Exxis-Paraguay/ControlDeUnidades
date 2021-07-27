@@ -29,21 +29,21 @@ namespace ControlDeUnidades.App_Data
             string strJSON = "";
             try
             {
-                string queryObtProy = "SELECT top 5 T0.\"DocEntry\", T0.\"DocNum\", T0.\"CardName\","+
-                " T0.\"CANCELED\" as \"Estado\", T0.\"DocNum\" as \"Piso\", T0.\"Printed\" as "+
-                " \"TipoArt\" from \"CP\".\"OINV\" T0 ORDER BY T0.\"DocNum\"";
+                string queryObtProy = "CALL CP.SP_Proyecto();";
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    string docEntry = "\"DocEntry\":\""+reader[0].ToString() +"\",";
+                    /*string docEntry = "\"DocEntry\":\""+reader[0].ToString() +"\",";
                     string docNum = "\"DocNum\":\"" + reader[1].ToString() + "\",";
                     string cardName = "\"CardName\":\"" + reader[2].ToString() + "\",";
                     string estado = "\"Estado\":\"" + reader[3].ToString() + "\",";
                     string piso = "\"Piso\":\"" + reader[4].ToString() + "\",";
-                    string tipoArt = "\"TipoArt\":\"" + reader[5].ToString() + "\"";
-                    
-                    string row = "{" + docEntry + docNum + cardName + estado + piso + tipoArt +"}";
+                    string tipoArt = "\"TipoArt\":\"" + reader[5].ToString() + "\"";*/
+                    string Proyecto = "\"Proyecto\" : \"" + reader[0].ToString() + "\",";
+                    string CantLibre = "\"CantLibre\":\"" + reader[1].ToString() + "\"";
+
+                    string row = "{" + Proyecto + CantLibre +"}";
 
                     if (flag > 0) col += "," + row;
                     else col += row;
@@ -65,23 +65,22 @@ namespace ControlDeUnidades.App_Data
         /*
          * Obtiene todos los proyectos activos
          */
-        public string obtenerUnidades(string idTorre)
+        public string obtenerUnidades(string idTorre, string idProyecto)
         {
             int flag = 0;
             string col = "";
             string strJSON = "";
             try
             {
-                string queryObtProy = "SELECT o.\"ItemCode\" AS \"numero\", o.\"U_Piso\" AS \"piso\", " +
-                    "o.\"U_Status\" AS \"estado\",o.\"ItmsGrpCod\" AS \"tipo\" FROM \"CP\".OITM o WHERE o.\"U_Torre\" = " + idTorre+ " order by o.\"U_Piso\"";
+                string queryObtProy = string.Format("CALL CP.SP_ITEMS({0},{1})", idTorre, idProyecto);
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     string numero = "\"numero\":\"" + reader[0].ToString() + "\",";
-                    string piso = "\"piso\":\"" + reader[1].ToString() + "\",";
-                    string estado = "\"estado\":\"" + reader[2].ToString() + "\",";
-                    string tipo = "\"tipo\":\"" + reader[3].ToString() + "\"";
+                    string piso = "\"Piso\":\"" + reader[1].ToString() + "\",";
+                    string estado = "\"Estado\":\"" + reader[2].ToString() + "\",";
+                    string tipo = "\"Tipo\":\"" + reader[3].ToString() + "\"";
 
                     string row = "{" + numero + piso + estado + tipo + "}";
 
@@ -112,8 +111,7 @@ namespace ControlDeUnidades.App_Data
             string strJSON = "";
             try
             {
-                string queryObtProy = "SELECT o.\"U_Status\" AS \"estado\", count(o.\"U_Status\") AS \"cantidad\""+
-                "FROM OITM o WHERE o.\"U_Torre\" = "+ idTorre + " group BY o.\"U_Status\"";
+                string queryObtProy = string.Format("SP_MacroProyecto({0},{1})",idProy, idTorre);
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -149,12 +147,13 @@ namespace ControlDeUnidades.App_Data
             string strJSON = "";
             try
             {
-                string queryObtProy = "SELECT DISTINCT o.\"U_Torre\" as \"CodigoTorre\" FROM \"CP\".OITM o WHERE o.\"U_Torre\" > 0";
+                /*string queryObtProy = "SELECT DISTINCT o.\"U_Torre\" as \"CodigoTorre\" FROM \"CP\".OITM o WHERE o.\"U_Torre\" > 0";*/
+                string queryObtProy = string.Format("CALL CP.SP_TORRE({0})", idProy);
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    string codigoTorre = "\"CodigoTorre\":\"" + reader[0].ToString() + "\"";
+                    string codigoTorre = "\"Torre\":\"" + reader[0].ToString() + "\"";
 
                     string row = "{" + codigoTorre + "}";
 
