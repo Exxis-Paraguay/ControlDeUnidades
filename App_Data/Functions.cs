@@ -78,9 +78,9 @@ namespace ControlDeUnidades.App_Data
                 while (reader.Read())
                 {
                     string numero = "\"numero\":\"" + reader[0].ToString() + "\",";
-                    string piso = "\"Piso\":\"" + reader[1].ToString() + "\",";
-                    string estado = "\"Estado\":\"" + reader[2].ToString() + "\",";
-                    string tipo = "\"Tipo\":\"" + reader[3].ToString() + "\"";
+                    string piso = "\"piso\":\"" + reader[1].ToString() + "\",";
+                    string estado = "\"estado\":\"" + reader[2].ToString() + "\",";
+                    string tipo = "\"tipo\":\"" + reader[3].ToString() + "\"";
 
                     string row = "{" + numero + piso + estado + tipo + "}";
 
@@ -116,8 +116,10 @@ namespace ControlDeUnidades.App_Data
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    string estado = "\"estado\":\"" + reader[0].ToString() + "\",";
-                    string cantidad = "\"cantidad\":\"" + reader[1].ToString() + "\",";
+                    string estado = "\"estado\":\"" + reader[1].ToString() + "\",";
+                    string cantidad = "\"cantidad\":\"" + reader[2].ToString() + "\"";
+                    string promedioVendidoPropio = "\"promedioVendidoPropio\":\"" + reader[3].ToString() + "\",";
+                    string promedioVendidoTotal = "\"promedioVendidoTotal\":\"" + reader[4].ToString() + "\"";
 
                     string row = "{" + estado + cantidad + "}";
 
@@ -153,9 +155,9 @@ namespace ControlDeUnidades.App_Data
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    string codigoTorre = "\"Torre\":\"" + reader[0].ToString() + "\"";
-
-                    string row = "{" + codigoTorre + "}";
+                    string codigoTorre = "\"Torre\":\"" + reader[0].ToString() + "\",";
+                    string libreTorre = "\"CantLibre\":\"" + reader[1].ToString() + "\"";
+                    string row = "{" + codigoTorre + libreTorre + "}";
 
                     if (flag > 0) col += "," + row;
                     else col += row;

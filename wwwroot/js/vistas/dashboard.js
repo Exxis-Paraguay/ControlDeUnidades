@@ -237,21 +237,21 @@ function obtenerProyectos(){
                 // Convierto a JSON
                 var proyecto = JSON.parse(data.responseText);
                 // Recorro los datos y los voy cargando
-                /*for (var i = 0; i < proyecto.length; i++) {
-                    var cod = proyecto[i].DocEntry;
-                    var nombre = proyecto[i].CardName;
-                    var porcentaje = proyecto[i].DocNum;
+                for (var i = 0; i < proyecto.length; i++) {
+                    var cod = proyecto[i].Proyecto;
+                    var nombre = proyecto[i].Proyecto;
+                    var porcentaje = proyecto[i].CantLibre;
                     var htmlProyectoLista = '<div id="proyList-' + cod + '" class="col-md-2 item"><div class="card text-center order-visitor-card"><div class="card-block texto">' +
                         '<h6 class="m-b-0"><label class="nombres">' + nombre + '</label></h6><p></p><h4 class="m-t-15 m-b-15">' +
-                        '<i class="fas fa-building m-r-15"></i></h4><p class="m-b-0">' + porcentaje + '% Libres</p></div> </div></div>';
+                        '<i class="fas fa-building m-r-15"></i></h4><p class="m-b-0">' + porcentaje + ' Libres</p></div> </div></div>';
                     var htmlProyectoMenu = '<li class="liProyNom"><a id="proyMenu-' + cod + '" href="#" class="waves-effect waves-dark"><span class="pcoded-micon"><i class="ti-angle-right"></i></span>' +
                         '<span class="pcoded-mtext">' + nombre + '</span><span class="pcoded-mcaret"></span></a></li>';
                     // Cargo la lista con los proyectos obtenidos
                     $('#listaProyectos').append(htmlProyectoLista);
                     // Cargo la lista con los proyectos en el menu
                     $('#menuProyectos').append(htmlProyectoMenu);
-                }*/
-                var htmlProyectoLista = '<div id="proyList-1" class="col-md-2 item"><div class="card text-center order-visitor-card"><div class="card-block texto">' +
+                }
+                /*var htmlProyectoLista = '<div id="proyList-1" class="col-md-2 item"><div class="card text-center order-visitor-card"><div class="card-block texto">' +
                     '<h6 class="m-b-0"><label class="nombres">Proyecto #1</label></h6><p></p><h4 class="m-t-15 m-b-15">' +
                     '<i class="fas fa-folder m-r-15"></i></h4><p class="m-b-0">20% Libres</p></div> </div></div>';
                 var htmlProyectoMenu = '<li class="liProyNom"><a id="proyMenu-1" href="#" class="waves-effect waves-dark"><span class="pcoded-micon"><i class="ti-angle-right"></i></span>' +
@@ -259,9 +259,9 @@ function obtenerProyectos(){
                 // Cargo la lista con los proyectos obtenidos
                 $('#listaProyectos').append(htmlProyectoLista);
                 // Cargo la lista con los proyectos en el menu
-                $('#menuProyectos').append(htmlProyectoMenu);
+                $('#menuProyectos').append(htmlProyectoMenu);*/
             } else {
-                notificacion('Ha ocurrido un error inerperado: [' + data.responseText+']', 'danger');
+                notificacion('Ha ocurrido un error inesperado: [' + data.responseText+']', 'danger');
             }
         },
         error: function (jqXHR, exception) {
@@ -272,7 +272,8 @@ function obtenerProyectos(){
 
 // Obtiene todas las torres por proyectos seleccionado
 function obtenerTorres(idProyecto) {
-    //Llamada al método obtenerProyectos desde el controlador
+    //macroproyectosDatos(idProyecto, '0')
+    //Llamada al método obtenerTorres desde el controlador
     $.ajax({
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -288,15 +289,16 @@ function obtenerTorres(idProyecto) {
                 var proyecto = JSON.parse(data.responseText);
                 // Recorro los datos y los voy cargando
                 for (var i = 0; i < proyecto.length; i++) {
-                    var cod = proyecto[i].CodigoTorre;
+                    var cod = proyecto[i].Torre;
+                    var cantLibre = proyecto[i].CantLibre;
                     var htmlProyectoLista = '<div id="torre-' + cod+'" class="col-md-2 item-torre"><div class="card text-center order-visitor-card">' +
                         '<div class="card-block texto-torre"><h6 class="m-b-0"><label class="nombres-torre">Torre# ' + cod+'</label></h6><p></p>' +
-                        '<h4 class="m-t-15 m-b-15"><i class="fas fa-building m-r-15"></i></h4><p class="m-b-0">n Libres</p></div></div></div>';
+                        '<h4 class="m-t-15 m-b-15"><i class="fas fa-building m-r-15"></i></h4><p class="m-b-0">' + cantLibre+' Libres</p></div></div></div>';
                     // Cargo la lista con las torres obtenidas
                     $('#listaTorres').append(htmlProyectoLista);
                 }
             } else {
-                notificacion('Ha ocurrido un error inerperado: [' + data.responseText + ']', 'danger');
+                notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
             }
         },
         error: function (jqXHR, exception) {
@@ -307,6 +309,7 @@ function obtenerTorres(idProyecto) {
 
 // Obtiene todas las unidades por torre seleccionada
 function obtenerUnidades(idTorre) {
+    macroproyectosDatos(_idProy, idTorre);
     var pisoActual = "0";
     var htmlPiso, htmlUnidades = "";
     var flagNewTr = parseInt(0);
@@ -319,7 +322,7 @@ function obtenerUnidades(idTorre) {
         type: "GET",
         cache: false,
         url: document.location.origin + '/Home/obtenerUnidades',
-        data: { "idTorre": idTorre },
+        data: { "idTorre": idTorre, "idProyecto": _idProy },
         success: function (data) {
             if (data.success) {
                 // Limpio la tabla
@@ -356,7 +359,7 @@ function obtenerUnidades(idTorre) {
                     }
                     // Control case para tipos
                     switch (tipoCod) {
-                        case '140':
+                        case '101':
                             tipo = "Piso";
                             break;
                         default:
@@ -394,7 +397,7 @@ function obtenerUnidades(idTorre) {
                     }
                 }
             } else {
-                notificacion('Ha ocurrido un error inerperado: [' + data.responseText + ']', 'danger');
+                notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
             }
         },
         error: function (jqXHR, exception) {
@@ -466,7 +469,7 @@ function obtenerInfoUnidades(idUnidad) {
                 $("#liInfoDes").append(liInfo);
                 $('#tblModalDocumentos tbody').append(docu + docu + docu + docu);
             } else {
-                notificacion('Ha ocurrido un error inerperado: [' + data.responseText + ']', 'danger');
+                notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
             }
         },
         error: function (jqXHR, exception) {
@@ -491,20 +494,67 @@ function macroproyectosDatos(idProy, idTorre) {
         success: function (data) {
             if (data.success) {
                 // Limpio la lista
-                $('#listaTorres').html("");
+                $('.indiceMacroPorTorre, .promediosTotales').html("");
                 // Convierto a JSON
                 var proyecto = JSON.parse(data.responseText);
+                var total, totalPromPropio, totalPromTot = parseInt(0);
+                //alert('estado ' + proyecto[0].estado);
                 // Recorro los datos y los voy cargando
                 for (var i = 0; i < proyecto.length; i++) {
-                    var cod = proyecto[i].CodigoTorre;
-                    var htmlProyectoLista = '<div id="torre-' + cod + '" class="col-md-2 item-torre"><div class="card text-center order-visitor-card">' +
-                        '<div class="card-block texto-torre"><h6 class="m-b-0"><label class="nombres-torre">Torre# ' + cod + '</label></h6><p></p>' +
-                        '<h4 class="m-t-15 m-b-15"><i class="fas fa-building m-r-15"></i></h4><p class="m-b-0">n Libres</p></div></div></div>';
+                    //alert('kkjjkjkj estado ' + proyecto[i].estado + " cant " + proyecto.length);
+                    var estado = proyecto[i].estado;
+                    var cantidad = proyecto[i].cantidad;
+                    var promVendidoPropio = proyecto[i].promedioVendidoPropio;
+                    var promVendidoTotal = proyecto[i].promedioVendidoTotal;
+                    total += parseInt(cantidad);
+                    totalPromPropio += parseInt(promVendidoPropio);
+                    totalPromTot += parseInt(promVendidoTotal);
+                    var classEstado = "";
+                    // Control case para estados
+                    switch (estado) {
+                        case 'Libres':
+                            classEstado = "text-c-green";
+                            break;
+                        case 'Asignadas':
+                            classEstado = "text-c-yellow";
+                            break;
+                        case 'Formalizadas':
+                            classEstado = "text-c-red";
+                            break;
+                        case 'Reservadas':
+                            classEstado = "text-c-orenge";
+                            break;
+                        case 'Protocolizadas':
+                            classEstado = "text-c-blue";
+                            break;
+                        default:
+                    }
+                    //alert(estado + " " + classEstado);
+                    var htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
+                        '<div class="col-4 p-r-0"><i class="fas fa-building ' + classEstado+' f-24"></i>' +
+                        '</div><div class="col-8 p-l-0"><h6>' + estado+'</h6><h6 class="m-b-30 f-w-700">' +
+                        'Nro ' + cantidad + '<span class="' + classEstado+' m-l-10">80%</span></h6></div></div></div>';
+                            
                     // Cargo la lista con las torres obtenidas
-                    $('#listaTorres').append(htmlProyectoLista);
+                    $('.indiceMacroPorTorre').append(htmlMacroPorTorre);
                 }
+                htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"> <div class="row align-items-center text-center">' +
+                '<div class="col-4 p-r-0"><i class="fas fa-building f-24"></i></div>' +
+                '<div class="col-8 p-l-0"><h6>Total</h6><h6 class="m-b-30 f-w-700">' + total+'</h6></div></div></div>';
+
+                $('.indiceMacroPorTorre').append(htmlMacroPorTorre);
+
+                htmlMacroPorTorre = '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
+                    '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido</span><h5>' + totalPromPropio + '</h5> </div></div> </div>' +
+                    '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
+                    '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + totalPromTot + '</h5> </div></div> </div>';
+
+                $('.promediosTotales').append(htmlMacroPorTorre);
+                htmlMacroPorTorre = "";
             } else {
-                notificacion('Ha ocurrido un error inerperado: [' + data.responseText + ']', 'danger');
+                notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
             }
         },
         error: function (jqXHR, exception) {
