@@ -22,10 +22,10 @@ namespace ControlDeUnidades.Controllers
          * Realiza la apertura sesion para el Dashboard
          */
         [HttpGet]
-        public ActionResult login(string user, string pass) //JsonResult
+        public ActionResult login(string user, string pass, string db) //JsonResult
          {
             Connection con = new Connection();
-            Boolean res = con.Login(user, pass);
+            Boolean res = con.Login(user, pass, db);
             string resultado = "";
             bool logCorrecto = false;
             try { 

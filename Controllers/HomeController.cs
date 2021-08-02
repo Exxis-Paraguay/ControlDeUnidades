@@ -29,9 +29,9 @@ namespace ControlDeUnidades.Controllers
         public IActionResult Index()
         {
             string sesion = HttpContext.Session.GetString("Session");
-            /*if(sesion != null) {*/
+            if(sesion != null) {
                 return View();
-            /*} else return RedirectToAction("Index", "Login");*/
+            } else return RedirectToAction("Index", "Login");
 
         }
 
@@ -175,14 +175,14 @@ namespace ControlDeUnidades.Controllers
          * Obtengo las unidades por torre seleccionada
          */
         [HttpGet]
-        public IActionResult obtenerInfoUnidades(string idUnidad, string idProyecto)
+        public IActionResult obtenerInfoUnidades(string idUnidad)
         {
             try
             {
                 var funciones = new Functions();
                 bool success = false;
                 // Obtengo los valores
-                var res = funciones.obtenerUnidades(idUnidad, idProyecto);
+                var res = funciones.obtenerInfoUnidades(idUnidad);
                 if (res.Contains("[")) success = true;
                 // Envio de valores en formato JSON
                 var json = Json(new

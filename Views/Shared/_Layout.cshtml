@@ -68,7 +68,9 @@
         border-right: 1px solid #d6d6d6;
         border-bottom: 1px solid #d6d6d6;
     }
-
+    .item-torre, .order-visitor-card {
+        cursor: pointer;
+    }
     .borderUnidad {
         border: 1px solid #fff;
     }
@@ -347,9 +349,9 @@
                         <div class="card-block">
                             <!-- Row inicio -->
                             <div class="row">
-                                <div class="col-lg-12 col-xl-12">
+                                <div class="contenido-modal col-lg-12 col-xl-12">
                                     <!-- Nav tabs -->
-                                    <ul class="nav nav-tabs  tabs" role="tablist">
+                                    <ul class="tab-titulo nav nav-tabs  tabs" role="tablist">
                                         <li id="tabModalInfo" class="nav-item">
                                             <a class="nav-link active" data-toggle="tab" href="#infoUnidad" role="tab">Informaci&oacute;n</a>
                                         </li>
@@ -358,7 +360,7 @@
                                         </li>
                                     </ul>
                                     <!-- Pestañas -->
-                                    <div class="tab-content tabs card-block">
+                                    <div class="tab-descr tab-content tabs card-block">
                                         <!-- Tab Informacion de la Unidad -->
                                         <div class="tab-pane active" id="infoUnidad" role="tabpanel">
                                             <ul id="liInfoDes" class="list-group list-group-flush">
@@ -369,7 +371,7 @@
                                         <div class="tab-pane" id="docUnidad" role="tabpanel">
                                             <div class="col-xl-12 col-md-12">
                                                 <div class="card table-card">
-                                                    <div class="card-header">
+                                                    <div class="titDocModal card-header">
                                                         <h5>#CLIENTE#</h5>
                                                     </div>
                                                     <div class="card-block">

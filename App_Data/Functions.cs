@@ -7,9 +7,11 @@ using System.Data.Odbc;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using ControlDeUnidades.App_Data;
 
 namespace ControlDeUnidades.App_Data
 {
+
     /* *
      * 
      * Todas las funciones realizadas sobre la base de datos de HANA
@@ -18,7 +20,8 @@ namespace ControlDeUnidades.App_Data
     public class Functions
     {
         Connection con = new Connection();
-
+        public static string _dbNew = string.Empty;
+        
         /*
          * Obtiene todos los proyectos activos
          */
@@ -29,17 +32,11 @@ namespace ControlDeUnidades.App_Data
             string strJSON = "";
             try
             {
-                string queryObtProy = "CALL CP.SP_Proyecto();";
+                string queryObtProy = "CALL " + _dbNew + ".SP_Proyecto();";
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    /*string docEntry = "\"DocEntry\":\""+reader[0].ToString() +"\",";
-                    string docNum = "\"DocNum\":\"" + reader[1].ToString() + "\",";
-                    string cardName = "\"CardName\":\"" + reader[2].ToString() + "\",";
-                    string estado = "\"Estado\":\"" + reader[3].ToString() + "\",";
-                    string piso = "\"Piso\":\"" + reader[4].ToString() + "\",";
-                    string tipoArt = "\"TipoArt\":\"" + reader[5].ToString() + "\"";*/
                     string Proyecto = "\"Proyecto\" : \"" + reader[0].ToString() + "\",";
                     string CantLibre = "\"CantLibre\":\"" + reader[1].ToString() + "\"";
 
@@ -72,7 +69,7 @@ namespace ControlDeUnidades.App_Data
             string strJSON = "";
             try
             {
-                string queryObtProy = string.Format("CALL CP.SP_ITEMS({0},{1})", idTorre, idProyecto);
+                string queryObtProy = string.Format("CALL " + _dbNew + ".SP_ITEMS({0},{1})", idTorre, idProyecto);
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -111,17 +108,17 @@ namespace ControlDeUnidades.App_Data
             string strJSON = "";
             try
             {
-                string queryObtProy = string.Format("CALL CP.SP_MacroProyecto({0},{1})",idProy, idTorre);
+                string queryObtProy = string.Format("CALL " + _dbNew + ".SP_MacroProyecto({0},{1})", idTorre, idProy);
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     string estado = "\"estado\":\"" + reader[1].ToString() + "\",";
-                    string cantidad = "\"cantidad\":\"" + reader[2].ToString() + "\"";
+                    string cantidad = "\"cantidad\":\"" + reader[2].ToString() + "\",";
                     string promedioVendidoPropio = "\"promedioVendidoPropio\":\"" + reader[3].ToString() + "\",";
                     string promedioVendidoTotal = "\"promedioVendidoTotal\":\"" + reader[4].ToString() + "\"";
 
-                    string row = "{" + estado + cantidad + "}";
+                    string row = "{" + estado + cantidad + promedioVendidoPropio + promedioVendidoTotal + "}";
 
                     if (flag > 0) col += "," + row;
                     else col += row;
@@ -150,7 +147,7 @@ namespace ControlDeUnidades.App_Data
             try
             {
                 /*string queryObtProy = "SELECT DISTINCT o.\"U_Torre\" as \"CodigoTorre\" FROM \"CP\".OITM o WHERE o.\"U_Torre\" > 0";*/
-                string queryObtProy = string.Format("CALL CP.SP_TORRE({0})", idProy);
+                string queryObtProy = string.Format("CALL " + _dbNew + ".SP_TORRE({0})", idProy);
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -175,24 +172,44 @@ namespace ControlDeUnidades.App_Data
             }
         }
 
-        public static String json_encode(OdbcDataReader reader, String[] columns)
+        /*
+         * Obtiene la información de la unidad
+         */
+        public string obtenerInfoUnidades(string idUnidad)
         {
-            return "";
-            /*int length = columns.Length;
-            String res = "{";
-            while (reader.Read())
+            int flag = 0;
+            string col = "";
+            string strJSON = "";
+            try
             {
-                
-                res += "{";
-                for (int i = 0; i < length; i++)                {
-                    res += "\"" + columns[i] + "\":\"" + reader[columns[i]].ToString() + "\"";
-                    if (i < length - 1)
-                        res += ",";
+                /*string queryObtProy = "SELECT DISTINCT o.\"U_Torre\" as \"CodigoTorre\" FROM \"CP\".OITM o WHERE o.\"U_Torre\" > 0";*/
+                string queryObtProy = string.Format("CALL " + _dbNew + ".SP_ObtenerInfoUnidades('{0}')", idUnidad);
+                OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
+                OdbcDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    string cliente = "\"Cliente\":\"" + reader[0].ToString() + "\",";
+                    string vendedor = "\"Vendedor\":\"" + reader[1].ToString() + "\",";
+                    string fechaVenta = "\"FechaVenta\":\"" + reader[2].ToString() + "\",";
+                    string montoDpto = "\"MontoDpto\":\"" + reader[3].ToString() + "\",";
+                    string nroFactura = "\"NroFactura\":\"" + reader[4].ToString() + "\",";
+                    string montoTotalFactura = "\"MontoTotalFactura\":\"" + reader[5].ToString() + "\"";
+                    string row = "{" + cliente + vendedor + fechaVenta + montoDpto + nroFactura+montoTotalFactura +"}";
+
+                    if (flag > 0) col += "," + row;
+                    else col += row;
+                    flag++;
                 }
-                res += "}";
+                strJSON = "[" + col + "]";
+                con.DesconectarHANA();
+                return strJSON;
             }
-            res += "}";
-            return res;*/
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                con.DesconectarHANA();
+                return error;
+            }
         }
     }
 }

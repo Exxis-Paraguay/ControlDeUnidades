@@ -1,11 +1,13 @@
 ﻿// Variables Globales
-var _nombreProy, _nombreTorre, _idProy, _idTorre = "";
+var _nombreProy, _nombreTorre = "";
+var _idProy, _idTorre = "0";
 $(document).ready(function () {
+
     /*
      * LLAMADA A FUNCIONES ===============================================================================
      */
     obtenerProyectos();
-
+    
     /*
      * CSS ===============================================================================
      */
@@ -15,7 +17,7 @@ $(document).ready(function () {
     $("#dialogInfoUnidad").css("display", "none");
     // Ocultar Sector Unidades
     $("#sector-unidades").css("display", "none");
-    //Ocultar todas las torres
+    // Ocultar todas las torres
     $(".torre").css("display", "none");
     // Crear breadcrumb
     breadcrumb('home');
@@ -26,14 +28,11 @@ $(document).ready(function () {
     // ------------------------------------- click ----------------------------------------------------
     // Ocultar menu lateral
     $("#mobile-collapse").click();
-    
     //Evento click sobre los proyectos desde dashboard principal y menu
     $('body').on('click', '.item, .liProyNom a', function () {
         var idProy = $(this).attr('id').split('-')[1];
         _nombreProy = $("#" + $(this).attr('id') + " .nombres").text();
         _idProy = idProy;
-        /*$("#sector-unidades").css("display", "inline");
-        $("#sector-proyectos").css("display", "none");*/
 
         $(".torre").css("display", "none");
         $(".seccion-buscar-torre").css("display", "inline");
@@ -66,8 +65,11 @@ $(document).ready(function () {
     // Click sobre unidad aparece modal
     $('body').on('click', '.pointDash', function () {
         var idUnidad = $("#" + $(this).attr("id") + " input").val();
-        obtenerInfoUnidades(idUnidad);
+        var estado = $("#estado-" + $(this).attr("id").split('-')[1]).val();
+        obtenerInfoUnidades(idUnidad, estado);
         $("#dialogInfoUnidad").dialog();
+        
+        // <input type="hidden" value="1234">
     });
     // Evento click de cerrar modal
     $("#btnCerrarModalInfo").click(function () {
@@ -76,6 +78,8 @@ $(document).ready(function () {
     });
     // Evento click del boton volver de la pantalla filtro por torre
     $("#btnVolverProyectos").click(function () {
+        _idProy = "0";
+        _idTorre = "0";
         $("#sector-unidades").css("display", "none");
         $("#sector-proyectos").css("display", "inline");
         $(".buscador").val("");
@@ -87,6 +91,8 @@ $(document).ready(function () {
     });
     // Evento click del boton volver de la pantalla unidades
     $("#btnVolverFiltroTorres").click(function () {
+        _idTorre = "0";
+        macroproyectosDatos(_idProy, _idTorre);
         $(".torre").css("display", "none");
         $(".seccion-buscar-torre").css("display", "inline");
         // Crear breadcrumb
@@ -99,15 +105,10 @@ $(document).ready(function () {
      */
     // Buscador Proyecto
     $('.buscador').keyup(function () {
-        /*$("#sector-unidades").css("display", "none");
-        $("#sector-proyectos").css("display", "inline");*/
-
-
         $(".torre").css("display", "none");
         $(".seccion-buscar-torre").css("display", "inline");
         $("#sector-unidades").css("display", "none");
         $("#sector-proyectos").css("display", "inline");
-
 
         // Crear breadcrumb
         breadcrumb('home');
@@ -167,14 +168,14 @@ $(document).ready(function () {
         // recorro filtro de estados
         var cont = parseInt(0);
         //oculto todo
-        $(".Libres, .Asignados, .Reservados, .Formalizados, .Protocolizados").css("display", "none");
+        $(".Libres, .Asignadas, .Reservadas, .Formalizadas, .Protocolizadas").css("display", "none");
         //por cada filtro seleccionado se muestra
         $(".cbEstados :checkbox:checked").each(function () {
             $("." + $(this).val()).removeAttr("style");
             cont++;
         });
         // Si no se selecciono ningun filtro, se muestra todo
-        if (cont == 0) $(".Libres, .Asignados, .Reservados, .Formalizados, .Protocolizados").removeAttr("style");
+        if (cont == 0) $(".Libres, .Asignadas, .Reservadas, .Formalizadas, .Protocolizadas").removeAttr("style");
     });
 });
 
@@ -220,6 +221,7 @@ function notificacion(message, type) { // type: danger, success
 /*
 * FUNCIONES ===============================================================================
 */
+
 // Obtiene todos los proyectos activos
 function obtenerProyectos(){
     //Llamada al método obtenerProyectos desde el controlador
@@ -242,10 +244,10 @@ function obtenerProyectos(){
                     var nombre = proyecto[i].Proyecto;
                     var porcentaje = proyecto[i].CantLibre;
                     var htmlProyectoLista = '<div id="proyList-' + cod + '" class="col-md-2 item"><div class="card text-center order-visitor-card"><div class="card-block texto">' +
-                        '<h6 class="m-b-0"><label class="nombres">' + nombre + '</label></h6><p></p><h4 class="m-t-15 m-b-15">' +
+                        '<h6 class="m-b-0"><label class="nombres">Proyecto ' + nombre + '</label></h6><p></p><h4 class="m-t-15 m-b-15">' +
                         '<i class="fas fa-building m-r-15"></i></h4><p class="m-b-0">' + porcentaje + ' Libres</p></div> </div></div>';
                     var htmlProyectoMenu = '<li class="liProyNom"><a id="proyMenu-' + cod + '" href="#" class="waves-effect waves-dark"><span class="pcoded-micon"><i class="ti-angle-right"></i></span>' +
-                        '<span class="pcoded-mtext">' + nombre + '</span><span class="pcoded-mcaret"></span></a></li>';
+                        '<span class="pcoded-mtext nombres">Proyecto ' + nombre + '</span><span class="pcoded-mcaret"></span></a></li>';
                     // Cargo la lista con los proyectos obtenidos
                     $('#listaProyectos').append(htmlProyectoLista);
                     // Cargo la lista con los proyectos en el menu
@@ -272,7 +274,7 @@ function obtenerProyectos(){
 
 // Obtiene todas las torres por proyectos seleccionado
 function obtenerTorres(idProyecto) {
-    //macroproyectosDatos(idProyecto, '0')
+    macroproyectosDatos(idProyecto, '0');
     //Llamada al método obtenerTorres desde el controlador
     $.ajax({
         contentType: 'application/json; charset=utf-8',
@@ -346,14 +348,22 @@ function obtenerUnidades(idTorre) {
                             estado = "Libres";
                             classEstado = "bg-c-green";
                             break;
-                        case '04':
-                            estado = "Asignados";
+                        case '02':
+                            estado = "Asignadas";
                             classEstado = "bg-c-yellow";
                             iconEstado = '<i class="fas fa-close text-c-red mat-icon f-24"></i>';
                             break;
-                        case '08':
-                            estado = "Formalizados";
+                        case '03':
+                            estado = "Reservadas";
+                            classEstado = "bg-c-orenge";
+                            break;
+                        case '04':
+                            estado = "Formalizadas";
                             classEstado = "bg-c-red";
+                            break;
+                        case '05':
+                            estado = "Protocolizadas";
+                            classEstado = "bg-c-blue";
                             break;
                         default:
                     }
@@ -382,12 +392,12 @@ function obtenerUnidades(idTorre) {
                             pisoActual = "0";
                             // primer depto del nuevo piso
                             htmlUnidades += '<td id="und-' + numero.replace(/ /g, '') + '" class="text-center text-white ' + classEstado+' ' + estado+' pointDash">' +
-                                '<h6>' + numero + '</h6>' + iconEstado+'</td>';
+                                '<h6>' + numero + '</h6>' + iconEstado + ' <input type="hidden" id="estado-' + numero.replace(/ /g, '') + '" value="' + estado +'"></td>';
                         }
                     }
                     if (!nuevoTr) {
                         htmlUnidades += '<td id="und-' + numero.replace(/ /g, '') + '" class="text-center text-white ' + classEstado + ' ' + estado +' pointDash">'+
-                            '<h6>' + numero + '</h6>' + iconEstado+'<input type="hidden" id="custId" name="custId" value="' + numero+'"></td>';
+                            '<h6>' + numero + '</h6>' + iconEstado + '<input type="hidden" id="custId" name="custId" value="' + numero + '"><input type="hidden" id="estado-' + numero.replace(/ /g, '')+'" value="' + estado +'"></td>';
                         pisoActual = piso;
                         if ((proyecto.length - 1) == i) {
                             htmlTablaFinal = htmlPiso + htmlUnidades + "</tr>";
@@ -434,7 +444,8 @@ function breadcrumb(page) {
 }
 
 // Obtiene la información de la unidad seleccionada
-function obtenerInfoUnidades(idUnidad) {
+function obtenerInfoUnidades(idUnidad, estado) {
+    idUnidad = "2 - 11";
     //Llamada al método obtenerProyectos desde el controlador
     $.ajax({
         contentType: 'application/json; charset=utf-8',
@@ -446,28 +457,37 @@ function obtenerInfoUnidades(idUnidad) {
         success: function (data) {
             if (data.success) {
                 // var proyecto = JSON.parse(data.responseText);
-
+                var proyecto = JSON.parse(data.responseText); // Estado: N Y C
+                
                 //Vaciar pestañas
                 $("#liInfoDes").html("");
-                $('#tblModalDocumentos tbody').html("");
                 // Titulo modal
                 $("#tituloModalUnidad").html("");
-                $("#tituloModalUnidad").append("<h5>"+_nombreProy + " - " + _nombreTorre+"</h5>");
-                $("#tituloModalUnidad").append("<span><b>Departamento:</b> " + idUnidad +"</span>");
-
-                // Pestaña Informacion
-                var cliente = '<li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: #NOMBRE#</li>';
-                var vendedor = '<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: #VENDEDOR#</li>';
-                var fecha = '<li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: #FECHA#</li>';
-                var monto = '<li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: #MONTO#</li>';
-                var liInfo = cliente + vendedor + fecha + monto;
-                // Pestaña Documentos relacionados
-                var docu = '<tr><td><div class="d-inline-block align-middle"><i class="far fa-file-alt text-c-red f-24"></i>' +
-                    '<div class="d-inline-block"><p class="text-muted m-b-0">Factura Nro: #NUMERO#</p></div></div>' +
-                    '</td> <td class="text-right"><h6 class="f-w-700">#MONTO_FACT#</h6> </td> </tr>';
-                // Agregar pestañas al modal
-                $("#liInfoDes").append(liInfo);
-                $('#tblModalDocumentos tbody').append(docu + docu + docu + docu);
+                $("#tituloModalUnidad").append("<h5>" + _nombreProy + " - " + _nombreTorre + "</h5>");
+                $("#tituloModalUnidad").append("<span><b>Departamento:</b> " + idUnidad + "</span>");
+                $(".tab-titulo, .tab-descr").css('display','none');
+                $('#tblModalDocumentos tbody').html("");
+                $(".titDocModal").html("");
+                $(".info-estado-modal").html("");
+                if (estado == "Reservadas" || estado == "Protocolizadas" || estado == "Hipotecadas" || estado == "Devueltas") {
+                    $('.contenido-modal').prepend('<h5 class="info-estado-modal text-center">Unidad ' + estado.slice(0, -1)+'</h5>');
+                } else { // Libres, Asignadas, Formalizadas, Entregadas, Alquiladas
+                    $(".tab-titulo, .tab-descr").removeAttr('style');//css('display', 'inline');
+                    // Pestaña Informacion
+                    $('.titDocModal').append("<h5>" + proyecto[0].Cliente+"</h5>");
+                    var cliente = '<li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: ' + proyecto[0].Cliente+'</li>';
+                    var vendedor = '<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: ' + proyecto[0].Vendedor + '</li>';
+                    var fecha = '<li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: ' + proyecto[0].FechaVenta.split(' ')[0] + '</li>';
+                    var monto = '<li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: ' + separadorMiles(proyecto[0].MontoDpto.replace(',', '.')) + '</li>';
+                    var liInfo = cliente + vendedor + fecha + monto;
+                    // Pestaña Documentos relacionados
+                    var docu = '<tr><td><div class="d-inline-block align-middle"><i class="far fa-file-alt text-c-red f-24"></i>' +
+                        '<div class="d-inline-block"><p class="text-muted m-b-0">Factura Nro: ' + proyecto[0].NroFactura + '</p></div></div>' +
+                        '</td> <td class="text-right"><h6 class="f-w-700">' + separadorMiles(proyecto[0].MontoTotalFactura.replace(',','.')) + '</h6> </td> </tr>';
+                    // Agregar pestañas al modal
+                    $("#liInfoDes").append(liInfo);
+                    $('#tblModalDocumentos tbody').append(docu); // + docu + docu + docu);
+                }
             } else {
                 notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
             }
@@ -481,27 +501,110 @@ function obtenerInfoUnidades(idUnidad) {
 // Arma el macroproyecto
 function macroproyectosDatos(idProy, idTorre) {
     // Datos por proyecto .datos-por-proyecto
-
-    // Datos por torre .datos-por-proyecto
-
     $.ajax({
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         type: "GET",
+        async: false,
+        cache: false,
+        url: document.location.origin + '/Home/obtenerMacroproyecto',
+        data: { "idProy": idProy, "idTorre": "0" },
+        success: function (data) {
+            if (data.success) {
+                // Limpio la lista
+                $('.indiceMacroPorProy, .promediosTotalesProy').html("");
+                // Convierto a JSON
+                var proyecto = JSON.parse(data.responseText);
+                var total = parseInt(0);
+                var totalPromPropio = parseInt(0);
+                var totalPromTot = parseInt(0);
+                //alert('estado ' + proyecto[0].estado);
+                // Recorro los datos y los voy cargando
+                for (var i = 0; i < proyecto.length; i++) {
+                    //alert('kkjjkjkj estado ' + proyecto[i].estado + " cant " + proyecto.length);
+                    var estado = proyecto[i].estado;
+                    var cantidad = proyecto[i].cantidad;
+                    var promVendidoPropio = proyecto[i].promedioVendidoPropio;
+                    var promVendidoTotal = proyecto[i].promedioVendidoTotal;
+
+                    total += parseInt(cantidad);
+                    totalPromPropio += parseInt(promVendidoPropio);
+                    totalPromTot += parseInt(promVendidoTotal);
+                    //alert(total + " -- " + totalPromPropio + " -- " + totalPromTot + " () " + proyecto[i].promedioVendidoPropio + " () " + proyecto[i].promedioVendidoTotal);
+                    var classEstado = "";
+                    // Control case para estados
+                    switch (estado) {
+                        case 'Libres':
+                            classEstado = "text-c-green";
+                            break;
+                        case 'Asignadas':
+                            classEstado = "text-c-yellow";
+                            break;
+                        case 'Formalizadas':
+                            classEstado = "text-c-red";
+                            break;
+                        case 'Reservadas':
+                            classEstado = "text-c-orenge";
+                            break;
+                        case 'Protocolizadas':
+                            classEstado = "text-c-blue";
+                            break;
+                        default:
+                    }
+                    //alert(estado + " " + classEstado);
+                    var htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
+                        '<div class="col-4 p-r-0"><i class="fas fa-building ' + classEstado + ' f-24"></i>' +
+                        '</div><div class="col-8 p-l-0"><h6>' + estado + '</h6><h6 class="m-b-30 f-w-700">' +
+                        'Nro ' + cantidad + '<span class="' + classEstado + ' m-l-10">' + cantidad+'%</span></h6></div></div></div>';
+
+                    // Cargo la lista con las torres obtenidas
+                    $('.indiceMacroPorProy').append(htmlMacroPorTorre);
+                }
+                //alert("2)  "+total + " -- " + totalPromPropio + " -- " + totalPromTot);
+                htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"> <div class="row align-items-center text-center">' +
+                    '<div class="col-4 p-r-0"><i class="fas fa-building f-24"></i></div>' +
+                    '<div class="col-8 p-l-0"><h6>Total</h6><h6 class="m-b-30 f-w-700">' + total + '</h6></div></div></div>';
+
+                $('.indiceMacroPorProy').append(htmlMacroPorTorre);
+
+                htmlMacroPorTorre = '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
+                    '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido</span><h5>' + separadorMiles(totalPromPropio) + '</h5> </div></div> </div>' +
+                    '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
+                    '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + separadorMiles(totalPromTot) + '</h5> </div></div> </div>';
+
+                $('.promediosTotalesProy').append(htmlMacroPorTorre);
+                htmlMacroPorTorre = "";
+            } else {
+                notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
+            }
+        },
+        error: function (jqXHR, exception) {
+            app.ajaxError(jqXHR, exception);
+        }
+    });
+
+    // Datos por torre .datos-por-proyecto
+    $.ajax({
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: "GET",
+        async: false,
         cache: false,
         url: document.location.origin + '/Home/obtenerMacroproyecto',
         data: { "idProy": idProy, "idTorre": idTorre },
         success: function (data) {
             if (data.success) {
                 // Limpio la lista
-                $('.indiceMacroPorTorre, .promediosTotales').html("");
+                $('.indiceMacroPorTorre, .promediosTotalesTorres').html("");
                 // Convierto a JSON
                 var proyecto = JSON.parse(data.responseText);
-                var total, totalPromPropio, totalPromTot = parseInt(0);
-                //alert('estado ' + proyecto[0].estado);
+                var total = parseInt(0);
+                var totalPromPropio = parseInt(0);
+                var totalPromTot = parseInt(0);
                 // Recorro los datos y los voy cargando
                 for (var i = 0; i < proyecto.length; i++) {
-                    //alert('kkjjkjkj estado ' + proyecto[i].estado + " cant " + proyecto.length);
                     var estado = proyecto[i].estado;
                     var cantidad = proyecto[i].cantidad;
                     var promVendidoPropio = proyecto[i].promedioVendidoPropio;
@@ -529,11 +632,10 @@ function macroproyectosDatos(idProy, idTorre) {
                             break;
                         default:
                     }
-                    //alert(estado + " " + classEstado);
                     var htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
                         '<div class="col-4 p-r-0"><i class="fas fa-building ' + classEstado+' f-24"></i>' +
                         '</div><div class="col-8 p-l-0"><h6>' + estado+'</h6><h6 class="m-b-30 f-w-700">' +
-                        'Nro ' + cantidad + '<span class="' + classEstado+' m-l-10">80%</span></h6></div></div></div>';
+                        'Nro ' + cantidad + '<span class="' + classEstado + ' m-l-10">' + cantidad+'%</span></h6></div></div></div>';
                             
                     // Cargo la lista con las torres obtenidas
                     $('.indiceMacroPorTorre').append(htmlMacroPorTorre);
@@ -546,12 +648,12 @@ function macroproyectosDatos(idProy, idTorre) {
 
                 htmlMacroPorTorre = '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
                     '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
-                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido</span><h5>' + totalPromPropio + '</h5> </div></div> </div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido</span><h5>' + separadorMiles(totalPromPropio) + '</h5> </div></div> </div>' +
                     '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
                     '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
-                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + totalPromTot + '</h5> </div></div> </div>';
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + separadorMiles(totalPromTot) + '</h5> </div></div> </div>';
 
-                $('.promediosTotales').append(htmlMacroPorTorre);
+                $('.promediosTotalesTorres').append(htmlMacroPorTorre);
                 htmlMacroPorTorre = "";
             } else {
                 notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
@@ -561,4 +663,24 @@ function macroproyectosDatos(idProy, idTorre) {
             app.ajaxError(jqXHR, exception);
         }
     });
+}
+
+
+
+// https://es.stackoverflow.com/questions/82651/separador-de-miles-con-javascript-php-o-jquery
+function separadorMiles(num) {
+    if (!num || num == 'NaN') return '-';
+    if (num == 'Infinity') return '&#x221e;';
+    num = num.toString().replace(/\$|\,/g, '');
+    if (isNaN(num))
+        num = "0";
+    sign = (num == (num = Math.abs(num)));
+    num = Math.floor(num * 100 + 0.50000000001);
+    cents = num % 100;
+    num = Math.floor(num / 100).toString();
+    if (cents < 10)
+        cents = "0" + cents;
+    for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++)
+        num = num.substring(0, num.length - (4 * i + 3)) + '.' + num.substring(num.length - (4 * i + 3));
+    return (((sign) ? '' : '-') + num + ',' + cents);
 }

@@ -1,4 +1,12 @@
 ﻿$(document).ready(function () {
+    // Cargo los select desde el json
+    $.getJSON("js/vistas/databases.json", function (json) {
+        $("#ddlDatabase").find('option').remove();
+        $("#ddlDatabase").append('<option value=""></option>');
+        for (var i = 0; i < json.length; i++) {
+            $("#ddlDatabase").append('<option value="' + json[i].nombre + '">' + json[i].nombre + '</option>');
+        }
+    });
     // Cuando el foco este sobre el campo user o pass, el texto de error desaparecera
     $("#txtPass, #txtUser").focus(function () {
         $("#lbMsgLogin").text("");
@@ -14,6 +22,11 @@
 });
 
 /*
+ * Cargar lista de base de datos
+ */
+
+
+/*
  * Realiza el login para ingresar al Dashboard
  */
 function login() {
@@ -24,7 +37,7 @@ function login() {
         type: "GET",
         cache: false,
         url: document.location.origin + '/Login/login',
-        data: { "user": $("#txtUser").val(), "pass": $("#txtPass").val() },//JSON.stringify({ "user": $("#txtUser").val(), "pass": $("#txtPass").val() }),//datos,
+        data: { "user": $("#txtUser").val(), "pass": $("#txtPass").val(), "db": $("#ddlDatabase option:selected").val() },//JSON.stringify({ "user": $("#txtUser").val(), "pass": $("#txtPass").val() }),//datos,
         success: function (data) {
             if (!data.success) $("#lbMsgLogin").text(data.responseText);
             else window.location.replace(document.location.origin+"/home");
