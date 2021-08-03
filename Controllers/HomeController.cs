@@ -141,14 +141,14 @@ namespace ControlDeUnidades.Controllers
          * Obtengo las unidades por torre seleccionada
          */
         [HttpGet]
-        public IActionResult obtenerMacroproyecto(string idProy, string idTorre)
+        public IActionResult obtenerMacroproyecto(string idProy, string idTorre, string idTipoUnidad)
         {
             try
             {
                 var funciones = new Functions();
                 bool success = false;
                 // Obtengo los valores
-                var res = funciones.obtenerMacroproyecto(idProy, idTorre);
+                var res = funciones.obtenerMacroproyecto(idProy, idTorre, idTipoUnidad);
                 if (res.Contains("[")) success = true;
                 // Envio de valores en formato JSON
                 var json = Json(new
@@ -183,6 +183,40 @@ namespace ControlDeUnidades.Controllers
                 bool success = false;
                 // Obtengo los valores
                 var res = funciones.obtenerInfoUnidades(idUnidad);
+                if (res.Contains("[")) success = true;
+                // Envio de valores en formato JSON
+                var json = Json(new
+                {
+                    success = success,
+                    responseText = res
+                });
+                return json;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                // En caso de error se envia el texto por JSON
+                var json = Json(new
+                {
+                    success = false,
+                    responseText = error
+                });
+                return json;
+            }
+        }
+
+        /*
+         * Obtengo las unidades por torre seleccionada
+         */
+        [HttpGet]
+        public IActionResult obtenerEstados()
+        {
+            try
+            {
+                var funciones = new Functions();
+                bool success = false;
+                // Obtengo los valores
+                var res = funciones.obtenerEstados();
                 if (res.Contains("[")) success = true;
                 // Envio de valores en formato JSON
                 var json = Json(new

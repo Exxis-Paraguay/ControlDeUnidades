@@ -101,22 +101,22 @@ namespace ControlDeUnidades.App_Data
         /*
          * Obtiene todos los datos para crear el MAcroproyecto
          */
-        public string obtenerMacroproyecto(string idProy, string idTorre)
+        public string obtenerMacroproyecto(string idProy, string idTorre, string idTipoUnidad)// 01 - depto
         {
             int flag = 0;
             string col = "";
             string strJSON = "";
             try
             {
-                string queryObtProy = string.Format("CALL " + _dbNew + ".SP_MacroProyecto({0},{1})", idTorre, idProy);
+                string queryObtProy = string.Format("CALL " + _dbNew + ".SP_MacroProyecto({0},{1},{2})", idTorre, idProy, idTipoUnidad);
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     string estado = "\"estado\":\"" + reader[1].ToString() + "\",";
                     string cantidad = "\"cantidad\":\"" + reader[2].ToString() + "\",";
-                    string promedioVendidoPropio = "\"promedioVendidoPropio\":\"" + reader[3].ToString() + "\",";
-                    string promedioVendidoTotal = "\"promedioVendidoTotal\":\"" + reader[4].ToString() + "\"";
+                    string promedioVendidoPropio = "\"promedioVendidoTotalM2\":\"" + reader[3].ToString() + "\",";
+                    string promedioVendidoTotal = "\"promedioVendidoPropio\":\"" + reader[4].ToString() + "\"";
 
                     string row = "{" + estado + cantidad + promedioVendidoPropio + promedioVendidoTotal + "}";
 
@@ -195,6 +195,42 @@ namespace ControlDeUnidades.App_Data
                     string nroFactura = "\"NroFactura\":\"" + reader[4].ToString() + "\",";
                     string montoTotalFactura = "\"MontoTotalFactura\":\"" + reader[5].ToString() + "\"";
                     string row = "{" + cliente + vendedor + fechaVenta + montoDpto + nroFactura+montoTotalFactura +"}";
+
+                    if (flag > 0) col += "," + row;
+                    else col += row;
+                    flag++;
+                }
+                strJSON = "[" + col + "]";
+                con.DesconectarHANA();
+                return strJSON;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                con.DesconectarHANA();
+                return error;
+            }
+        }
+
+        /*
+         * Obtiene la información de la unidad
+         */
+        public string obtenerEstados()
+        {
+            int flag = 0;
+            string col = "";
+            string strJSON = "";
+            try
+            {
+                /*string queryObtProy = "SELECT DISTINCT o.\"U_Torre\" as \"CodigoTorre\" FROM \"CP\".OITM o WHERE o.\"U_Torre\" > 0";*/
+                string queryObtProy = "SELECT a.\"Code\" AS \"codigo\", a.\"Name\" AS \"nombre\" FROM " + _dbNew + ".\"@EXX_ESTATUS\" AS a";
+                OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
+                OdbcDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    string codigo = "\"codigo\":\"" + reader[0].ToString() + "\",";
+                    string nombre = "\"nombre\":\"" + reader[1].ToString() + "\"";
+                    string row = "{" + codigo + nombre +  "}";
 
                     if (flag > 0) col += "," + row;
                     else col += row;

@@ -27,12 +27,6 @@ namespace ControlDeUnidades.Controllers
         public static OdbcConnection hanaConn;
         //public static string _db { get; set; } = string.Empty;
         public static string _db = string.Empty;
-        /*public static string Db
-        {
-            get { return _db; }
-            set { _db = value; }
-
-        }*/
         /*
          * Realiza el logueo por SL
          */

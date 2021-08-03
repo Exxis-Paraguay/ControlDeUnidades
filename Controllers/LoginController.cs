@@ -65,6 +65,8 @@ namespace ControlDeUnidades.Controllers
             bool logCorrecto = false;
             try
             {
+                Connection con = new Connection();
+                Boolean res = con.Logout();
                 HttpContext.Session.Clear();
                 string sesion = HttpContext.Session.GetString("Session");
                 if (sesion == null) logCorrecto = true;

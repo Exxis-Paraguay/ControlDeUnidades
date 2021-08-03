@@ -7,7 +7,7 @@ $(document).ready(function () {
      * LLAMADA A FUNCIONES ===============================================================================
      */
     obtenerProyectos();
-    
+    obtenerEstados();
     /*
      * CSS ===============================================================================
      */
@@ -68,8 +68,6 @@ $(document).ready(function () {
         var estado = $("#estado-" + $(this).attr("id").split('-')[1]).val();
         obtenerInfoUnidades(idUnidad, estado);
         $("#dialogInfoUnidad").dialog();
-        
-        // <input type="hidden" value="1234">
     });
     // Evento click de cerrar modal
     $("#btnCerrarModalInfo").click(function () {
@@ -164,7 +162,21 @@ $(document).ready(function () {
     });
 
     // Filtro Estado
-    $('.filtro-estado input.form-check-input').click(function () {
+    /*$('.filtro-estado input.form-check-input').click(function () {
+        // recorro filtro de estados
+        var cont = parseInt(0);
+        //oculto todo
+        $(".Libres, .Asignadas, .Reservadas, .Formalizadas, .Protocolizadas").css("display", "none");
+        //por cada filtro seleccionado se muestra
+        $(".cbEstados :checkbox:checked").each(function () {
+            $("." + $(this).val()).removeAttr("style");
+            cont++;
+        });
+        // Si no se selecciono ningun filtro, se muestra todo
+        if (cont == 0) $(".Libres, .Asignadas, .Reservadas, .Formalizadas, .Protocolizadas").removeAttr("style");
+    });*/
+    // Click sobre unidad aparece modal
+    $('body').on('click', '.filtro-estado input.form-check-input', function () {
         // recorro filtro de estados
         var cont = parseInt(0);
         //oculto todo
@@ -365,6 +377,19 @@ function obtenerUnidades(idTorre) {
                             estado = "Protocolizadas";
                             classEstado = "bg-c-blue";
                             break;
+
+                        case '06':
+                            estado = "Entregadas";
+                            classEstado = "bg-c-purple";
+                            break;
+                        case '07':
+                            estado = "Alquiladas";
+                            classEstado = "bg-info";
+                            break;
+                        case '08':
+                            estado = "Hipotecadas";
+                            classEstado = "bg-secondary";
+                            break;
                         default:
                     }
                     // Control case para tipos
@@ -508,7 +533,7 @@ function macroproyectosDatos(idProy, idTorre) {
         async: false,
         cache: false,
         url: document.location.origin + '/Home/obtenerMacroproyecto',
-        data: { "idProy": idProy, "idTorre": "0" },
+        data: { "idProy": idProy, "idTorre": "0", "idTipoUnidad": "01" },
         success: function (data) {
             if (data.success) {
                 // Limpio la lista
@@ -525,11 +550,11 @@ function macroproyectosDatos(idProy, idTorre) {
                     var estado = proyecto[i].estado;
                     var cantidad = proyecto[i].cantidad;
                     var promVendidoPropio = proyecto[i].promedioVendidoPropio;
-                    var promVendidoTotal = proyecto[i].promedioVendidoTotal;
+                    var promVendidoTotalM2 = proyecto[i].promedioVendidoTotalM2;
 
                     total += parseInt(cantidad);
                     totalPromPropio += parseInt(promVendidoPropio);
-                    totalPromTot += parseInt(promVendidoTotal);
+                    totalPromTot += parseInt(promVendidoTotalM2);
                     //alert(total + " -- " + totalPromPropio + " -- " + totalPromTot + " () " + proyecto[i].promedioVendidoPropio + " () " + proyecto[i].promedioVendidoTotal);
                     var classEstado = "";
                     // Control case para estados
@@ -549,6 +574,16 @@ function macroproyectosDatos(idProy, idTorre) {
                         case 'Protocolizadas':
                             classEstado = "text-c-blue";
                             break;
+
+                        case 'Entregadas':
+                            classEstado = "text-c-purple";
+                            break;
+                        case 'Alquiladas':
+                            classEstado = "text-info";
+                            break;
+                        case 'Hipotecadas':
+                            classEstado = "text-secondary";
+                            break;
                         default:
                     }
                     //alert(estado + " " + classEstado);
@@ -562,8 +597,8 @@ function macroproyectosDatos(idProy, idTorre) {
                 }
                 //alert("2)  "+total + " -- " + totalPromPropio + " -- " + totalPromTot);
                 htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"> <div class="row align-items-center text-center">' +
-                    '<div class="col-4 p-r-0"><i class="fas fa-building f-24"></i></div>' +
-                    '<div class="col-8 p-l-0"><h6>Total</h6><h6 class="m-b-30 f-w-700">' + total + '</h6></div></div></div>';
+                    //'<div class="col-4 p-r-0"><i class="fas fa-building f-24"></i></div>' +
+                    '<div class="col-12 p-l-0"><h5>Total</h5><h5 class="m-b-30 f-w-700">' + total + '</h5></div></div></div>';
 
                 $('.indiceMacroPorProy').append(htmlMacroPorTorre);
 
@@ -593,7 +628,7 @@ function macroproyectosDatos(idProy, idTorre) {
         async: false,
         cache: false,
         url: document.location.origin + '/Home/obtenerMacroproyecto',
-        data: { "idProy": idProy, "idTorre": idTorre },
+        data: { "idProy": idProy, "idTorre": idTorre, "idTipoUnidad": "01" },
         success: function (data) {
             if (data.success) {
                 // Limpio la lista
@@ -608,10 +643,10 @@ function macroproyectosDatos(idProy, idTorre) {
                     var estado = proyecto[i].estado;
                     var cantidad = proyecto[i].cantidad;
                     var promVendidoPropio = proyecto[i].promedioVendidoPropio;
-                    var promVendidoTotal = proyecto[i].promedioVendidoTotal;
+                    var promVendidoTotalM2 = proyecto[i].promedioVendidoTotalM2;
                     total += parseInt(cantidad);
                     totalPromPropio += parseInt(promVendidoPropio);
-                    totalPromTot += parseInt(promVendidoTotal);
+                    totalPromTot += parseInt(promVendidoTotalM2);
                     var classEstado = "";
                     // Control case para estados
                     switch (estado) {
@@ -630,6 +665,15 @@ function macroproyectosDatos(idProy, idTorre) {
                         case 'Protocolizadas':
                             classEstado = "text-c-blue";
                             break;
+                        case 'Entregadas':
+                            classEstado = "text-c-purple";
+                            break;
+                        case 'Alquiladas':
+                            classEstado = "text-info";
+                            break;
+                        case 'Hipotecadas':
+                            classEstado = "text-secondary";
+                            break;
                         default:
                     }
                     var htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
@@ -641,8 +685,8 @@ function macroproyectosDatos(idProy, idTorre) {
                     $('.indiceMacroPorTorre').append(htmlMacroPorTorre);
                 }
                 htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"> <div class="row align-items-center text-center">' +
-                '<div class="col-4 p-r-0"><i class="fas fa-building f-24"></i></div>' +
-                '<div class="col-8 p-l-0"><h6>Total</h6><h6 class="m-b-30 f-w-700">' + total+'</h6></div></div></div>';
+                //'<div class="col-4 p-r-0"><i class="fas fa-building f-24"></i></div>' +
+                '<div class="col-12 p-l-0"><h5>Total</h5><h5 class="m-b-30 f-w-700">' + total+'</h5></div></div></div>';
 
                 $('.indiceMacroPorTorre').append(htmlMacroPorTorre);
 
@@ -665,7 +709,39 @@ function macroproyectosDatos(idProy, idTorre) {
     });
 }
 
-
+// Obtiene todos los proyectos activos
+function obtenerEstados() {
+    //Llamada al método obtenerProyectos desde el controlador
+    $.ajax({
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: "GET",
+        cache: false,
+        url: document.location.origin + '/Home/obtenerEstados',
+        data: {},//{ "user": $("#txtUser").val(), "pass": $("#txtPass").val() },//JSON.stringify({ "user": $("#txtUser").val(), "pass": $("#txtPass").val() }),//datos,
+        success: function (data) {
+            if (data.success) {
+                // Limpio la lista
+                $('.cbEstados').html("");
+                // Convierto a JSON
+                var _estados = JSON.parse(data.responseText);
+                // Recorro los datos y los voy cargando
+                for (var i = 0; i < _estados.length; i++) {
+                    var estado = _estados[i].nombre;
+                    var chkHtml = '<div class="col-sm-2"><div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="checkbox" id="cb' + estado + '" value="' + estado+'">' +
+                        '<label class="form-check-label" for="cb' + estado + '">' + estado + '</label></div></div>';
+                    $('.cbEstados').append(chkHtml);
+                }
+            } else {
+                notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
+            }
+        },
+        error: function (jqXHR, exception) {
+            app.ajaxError(jqXHR, exception);
+        }
+    });
+}
 
 // https://es.stackoverflow.com/questions/82651/separador-de-miles-con-javascript-php-o-jquery
 function separadorMiles(num) {
