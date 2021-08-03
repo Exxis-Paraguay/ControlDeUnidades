@@ -7,7 +7,7 @@ $(document).ready(function () {
      * LLAMADA A FUNCIONES ===============================================================================
      */
     obtenerProyectos();
-    obtenerEstados();
+    
     /*
      * CSS ===============================================================================
      */
@@ -30,6 +30,7 @@ $(document).ready(function () {
     $("#mobile-collapse").click();
     //Evento click sobre los proyectos desde dashboard principal y menu
     $('body').on('click', '.item, .liProyNom a', function () {
+        obtenerEstados();
         var idProy = $(this).attr('id').split('-')[1];
         _nombreProy = $("#" + $(this).attr('id') + " .nombres").text();
         _idProy = idProy;
@@ -551,7 +552,7 @@ function macroproyectosDatos(idProy, idTorre) {
                     var cantidad = proyecto[i].cantidad;
                     var promVendidoPropio = proyecto[i].promedioVendidoPropio;
                     var promVendidoTotalM2 = proyecto[i].promedioVendidoTotalM2;
-
+                    var porcentaje = (proyecto[i].porcentaje);//.toFixed(2);
                     total += parseInt(cantidad);
                     totalPromPropio += parseInt(promVendidoPropio);
                     totalPromTot += parseInt(promVendidoTotalM2);
@@ -590,7 +591,7 @@ function macroproyectosDatos(idProy, idTorre) {
                     var htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
                         '<div class="col-4 p-r-0"><i class="fas fa-building ' + classEstado + ' f-24"></i>' +
                         '</div><div class="col-8 p-l-0"><h6>' + estado + '</h6><h6 class="m-b-30 f-w-700">' +
-                        'Nro ' + cantidad + '<span class="' + classEstado + ' m-l-10">' + cantidad+'%</span></h6></div></div></div>';
+                        'Nro ' + cantidad + '<span class="' + classEstado + ' m-l-10">' + porcentaje+'%</span></h6></div></div></div>';
 
                     // Cargo la lista con las torres obtenidas
                     $('.indiceMacroPorProy').append(htmlMacroPorTorre);
@@ -644,6 +645,7 @@ function macroproyectosDatos(idProy, idTorre) {
                     var cantidad = proyecto[i].cantidad;
                     var promVendidoPropio = proyecto[i].promedioVendidoPropio;
                     var promVendidoTotalM2 = proyecto[i].promedioVendidoTotalM2;
+                    var porcentaje = (proyecto[i].porcentaje);//.toFixed(2);
                     total += parseInt(cantidad);
                     totalPromPropio += parseInt(promVendidoPropio);
                     totalPromTot += parseInt(promVendidoTotalM2);
@@ -679,7 +681,7 @@ function macroproyectosDatos(idProy, idTorre) {
                     var htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
                         '<div class="col-4 p-r-0"><i class="fas fa-building ' + classEstado+' f-24"></i>' +
                         '</div><div class="col-8 p-l-0"><h6>' + estado+'</h6><h6 class="m-b-30 f-w-700">' +
-                        'Nro ' + cantidad + '<span class="' + classEstado + ' m-l-10">' + cantidad+'%</span></h6></div></div></div>';
+                        'Nro ' + cantidad + '<span class="' + classEstado + ' m-l-10">' + porcentaje+'%</span></h6></div></div></div>';
                             
                     // Cargo la lista con las torres obtenidas
                     $('.indiceMacroPorTorre').append(htmlMacroPorTorre);
@@ -716,6 +718,7 @@ function obtenerEstados() {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         type: "GET",
+        async: false,
         cache: false,
         url: document.location.origin + '/Home/obtenerEstados',
         data: {},//{ "user": $("#txtUser").val(), "pass": $("#txtPass").val() },//JSON.stringify({ "user": $("#txtUser").val(), "pass": $("#txtPass").val() }),//datos,

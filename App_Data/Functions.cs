@@ -108,7 +108,7 @@ namespace ControlDeUnidades.App_Data
             string strJSON = "";
             try
             {
-                string queryObtProy = string.Format("CALL " + _dbNew + ".SP_MacroProyecto({0},{1},{2})", idTorre, idProy, idTipoUnidad);
+                string queryObtProy = string.Format("CALL " + _dbNew + ".SP_MacroProyecto('{0}','{1}','{2}')", idTorre, idProy, idTipoUnidad);
                 OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -116,9 +116,11 @@ namespace ControlDeUnidades.App_Data
                     string estado = "\"estado\":\"" + reader[1].ToString() + "\",";
                     string cantidad = "\"cantidad\":\"" + reader[2].ToString() + "\",";
                     string promedioVendidoPropio = "\"promedioVendidoTotalM2\":\"" + reader[3].ToString() + "\",";
-                    string promedioVendidoTotal = "\"promedioVendidoPropio\":\"" + reader[4].ToString() + "\"";
+                    string promedioVendidoTotal = "\"promedioVendidoPropio\":\"" + reader[4].ToString() + "\",";
+                    //string porcentaje = "\"porcentaje\":\"" + Convert.ToDecimal(reader[5].ToString()).ToString() + "\"";
+                    string porcentaje = "\"porcentaje\":\"" + reader[5].ToString() + "\"";
 
-                    string row = "{" + estado + cantidad + promedioVendidoPropio + promedioVendidoTotal + "}";
+                    string row = "{" + estado + cantidad + promedioVendidoPropio + promedioVendidoTotal + porcentaje + "}";
 
                     if (flag > 0) col += "," + row;
                     else col += row;
