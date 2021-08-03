@@ -135,5 +135,23 @@ namespace ControlDeUnidades.Controllers
             hanaConn.Close();
         }
 
+        public void Logout()
+        {
+            try
+            {
+                string UrlLogin = Url + "/Logout";
+                IRestClient Client = new RestClient(UrlLogin);
+                IRestRequest Request = new RestRequest("Auth/SignIn");
+                Request.Method = Method.POST;
+                ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+                var response = Client.Post(Request);
+            }
+            catch (Exception ex)
+            { 
+            
+            }
+
+        }
+
     }
 }  
