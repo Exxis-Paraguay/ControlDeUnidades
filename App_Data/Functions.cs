@@ -117,8 +117,8 @@ namespace ControlDeUnidades.App_Data
                     string cantidad = "\"cantidad\":\"" + reader[2].ToString() + "\",";
                     string promedioVendidoPropio = "\"promedioVendidoTotalM2\":\"" + reader[3].ToString() + "\",";
                     string promedioVendidoTotal = "\"promedioVendidoPropio\":\"" + reader[4].ToString() + "\",";
-                    //string porcentaje = "\"porcentaje\":\"" + Convert.ToDecimal(reader[5].ToString()).ToString() + "\"";
-                    string porcentaje = "\"porcentaje\":\"" + reader[5].ToString() + "\"";
+                    string porcentaje = "\"porcentaje\":\"" + (decimal.Round(Convert.ToDecimal(reader[5].ToString()), 2)).ToString()  + "\"";
+                    
 
                     string row = "{" + estado + cantidad + promedioVendidoPropio + promedioVendidoTotal + porcentaje + "}";
 
@@ -190,13 +190,14 @@ namespace ControlDeUnidades.App_Data
                 OdbcDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    string cliente = "\"Cliente\":\"" + reader[0].ToString() + "\",";
-                    string vendedor = "\"Vendedor\":\"" + reader[1].ToString() + "\",";
-                    string fechaVenta = "\"FechaVenta\":\"" + reader[2].ToString() + "\",";
-                    string montoDpto = "\"MontoDpto\":\"" + reader[3].ToString() + "\",";
-                    string nroFactura = "\"NroFactura\":\"" + reader[4].ToString() + "\",";
-                    string montoTotalFactura = "\"MontoTotalFactura\":\"" + reader[5].ToString() + "\"";
-                    string row = "{" + cliente + vendedor + fechaVenta + montoDpto + nroFactura+montoTotalFactura +"}";
+                    string tipoDoc = "\"TipoDoc\":\"" + reader[0].ToString() + "\",";
+                    string cliente = "\"Cliente\":\"" + reader[1].ToString() + "\",";
+                    string vendedor = "\"Vendedor\":\"" + reader[2].ToString() + "\",";
+                    string fechaVenta = "\"FechaVenta\":\"" + reader[3].ToString() + "\",";
+                    string montoDpto = "\"MontoDpto\":\"" + reader[4].ToString() + "\",";
+                    string nroFactura = "\"NroFactura\":\"" + reader[5].ToString() + "\",";
+                    string montoTotalFactura = "\"MontoTotalFactura\":\"" + reader[6].ToString() + "\"";
+                    string row = "{" + tipoDoc + cliente + vendedor + fechaVenta + montoDpto + nroFactura+montoTotalFactura +"}";
 
                     if (flag > 0) col += "," + row;
                     else col += row;

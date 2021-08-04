@@ -2,7 +2,6 @@
 var _nombreProy, _nombreTorre = "";
 var _idProy, _idTorre = "0";
 $(document).ready(function () {
-
     /*
      * LLAMADA A FUNCIONES ===============================================================================
      */
@@ -163,32 +162,18 @@ $(document).ready(function () {
     });
 
     // Filtro Estado
-    /*$('.filtro-estado input.form-check-input').click(function () {
-        // recorro filtro de estados
-        var cont = parseInt(0);
-        //oculto todo
-        $(".Libres, .Asignadas, .Reservadas, .Formalizadas, .Protocolizadas").css("display", "none");
-        //por cada filtro seleccionado se muestra
-        $(".cbEstados :checkbox:checked").each(function () {
-            $("." + $(this).val()).removeAttr("style");
-            cont++;
-        });
-        // Si no se selecciono ningun filtro, se muestra todo
-        if (cont == 0) $(".Libres, .Asignadas, .Reservadas, .Formalizadas, .Protocolizadas").removeAttr("style");
-    });*/
-    // Click sobre unidad aparece modal
     $('body').on('click', '.filtro-estado input.form-check-input', function () {
         // recorro filtro de estados
         var cont = parseInt(0);
         //oculto todo
-        $(".Libres, .Asignadas, .Reservadas, .Formalizadas, .Protocolizadas").css("display", "none");
+        $(".Libre, .Asignado, .Reservado, .Formalizado, .Protocolizado, .Entregado, .Arrendados, .Hipotecado").css("display", "none");
         //por cada filtro seleccionado se muestra
         $(".cbEstados :checkbox:checked").each(function () {
-            $("." + $(this).val()).removeAttr("style");
+            $("." + $(this).val().split('/')[0]).removeAttr("style");
             cont++;
         });
         // Si no se selecciono ningun filtro, se muestra todo
-        if (cont == 0) $(".Libres, .Asignadas, .Reservadas, .Formalizadas, .Protocolizadas").removeAttr("style");
+        if (cont == 0) $(".Libre, .Asignado, .Reservado, .Formalizado, .Protocolizado, .Entregado, .Arrendados, .Hipotecado").removeAttr("style");
     });
 });
 
@@ -244,7 +229,7 @@ function obtenerProyectos(){
         type: "GET",
         cache: false,
         url: document.location.origin + '/Home/obtenerProyectos',
-        data: {},//{ "user": $("#txtUser").val(), "pass": $("#txtPass").val() },//JSON.stringify({ "user": $("#txtUser").val(), "pass": $("#txtPass").val() }),//datos,
+        data: {},
         success: function (data) {
             if (data.success) {
                 // Limpio la lista
@@ -266,15 +251,6 @@ function obtenerProyectos(){
                     // Cargo la lista con los proyectos en el menu
                     $('#menuProyectos').append(htmlProyectoMenu);
                 }
-                /*var htmlProyectoLista = '<div id="proyList-1" class="col-md-2 item"><div class="card text-center order-visitor-card"><div class="card-block texto">' +
-                    '<h6 class="m-b-0"><label class="nombres">Proyecto #1</label></h6><p></p><h4 class="m-t-15 m-b-15">' +
-                    '<i class="fas fa-folder m-r-15"></i></h4><p class="m-b-0">20% Libres</p></div> </div></div>';
-                var htmlProyectoMenu = '<li class="liProyNom"><a id="proyMenu-1" href="#" class="waves-effect waves-dark"><span class="pcoded-micon"><i class="ti-angle-right"></i></span>' +
-                    '<span class="pcoded-mtext">Proyecto #1</span><span class="pcoded-mcaret"></span></a></li>';
-                // Cargo la lista con los proyectos obtenidos
-                $('#listaProyectos').append(htmlProyectoLista);
-                // Cargo la lista con los proyectos en el menu
-                $('#menuProyectos').append(htmlProyectoMenu);*/
             } else {
                 notificacion('Ha ocurrido un error inesperado: [' + data.responseText+']', 'danger');
             }
@@ -358,38 +334,37 @@ function obtenerUnidades(idTorre) {
                     // Control case para estados
                     switch (estadoCod) {
                         case '01':
-                            estado = "Libres";
+                            estado = "Libre";
                             classEstado = "bg-c-green";
                             break;
                         case '02':
-                            estado = "Asignadas";
+                            estado = "Asignado";
                             classEstado = "bg-c-yellow";
                             iconEstado = '<i class="fas fa-close text-c-red mat-icon f-24"></i>';
                             break;
                         case '03':
-                            estado = "Reservadas";
+                            estado = "Reservado";
                             classEstado = "bg-c-orenge";
                             break;
                         case '04':
-                            estado = "Formalizadas";
+                            estado = "Formalizado";
                             classEstado = "bg-c-red";
                             break;
                         case '05':
-                            estado = "Protocolizadas";
+                            estado = "Protocolizado";
                             classEstado = "bg-c-blue";
                             break;
-
                         case '06':
-                            estado = "Entregadas";
-                            classEstado = "bg-c-purple";
+                            estado = "Hipotecado";
+                            classEstado = "bg-secondary";
                             break;
                         case '07':
-                            estado = "Alquiladas";
-                            classEstado = "bg-info";
+                            estado = "Arrendados";
+                            classEstado = "bg-naranja";
                             break;
                         case '08':
-                            estado = "Hipotecadas";
-                            classEstado = "bg-secondary";
+                            estado = "Entregado";
+                            classEstado = "bg-purpura";
                             break;
                         default:
                     }
@@ -450,7 +425,6 @@ function breadcrumb(page) {
     var bd2 = '<li class="breadcrumb-item"><a href="#!">' + _nombreTorre+'</a></li>';
     var bd3 = '<li class="breadcrumb-item"><a href="#!">Unidades</a></li>';
 
-
     // Control case para estados
     switch (page) {
         case 'home':
@@ -471,7 +445,7 @@ function breadcrumb(page) {
 
 // Obtiene la información de la unidad seleccionada
 function obtenerInfoUnidades(idUnidad, estado) {
-    idUnidad = "2 - 11";
+    //idUnidad = "2 - 11";
     //Llamada al método obtenerProyectos desde el controlador
     $.ajax({
         contentType: 'application/json; charset=utf-8',
@@ -482,19 +456,216 @@ function obtenerInfoUnidades(idUnidad, estado) {
         data: { "idUnidad": idUnidad},
         success: function (data) {
             if (data.success) {
-                // var proyecto = JSON.parse(data.responseText);
-                var proyecto = JSON.parse(data.responseText); // Estado: N Y C
-                
+                var documentos = JSON.parse(data.responseText); // Estado: N Y C
+                var ofertaVentaCount = parseInt(0);
+                var textoCount = parseInt(0);
+                var formalCount = parseInt(0);
+                var liInfoLibres = "";
+                var docuLibres = "";
                 //Vaciar pestañas
                 $("#liInfoDes").html("");
                 // Titulo modal
                 $("#tituloModalUnidad").html("");
                 $("#tituloModalUnidad").append("<h5>" + _nombreProy + " - " + _nombreTorre + "</h5>");
                 $("#tituloModalUnidad").append("<span><b>Departamento:</b> " + idUnidad + "</span>");
-                $(".tab-titulo, .tab-descr").css('display','none');
+                $(".tab-titulo, .tab-descr").css('display', 'none');
                 $('#tblModalDocumentos tbody').html("");
                 $(".titDocModal").html("");
                 $(".info-estado-modal").html("");
+                for (var i = 0; i < documentos.length; i++) {
+                    var tipoDoc = documentos[i].TipoDoc;
+                    var cliente = documentos[i].Cliente;
+                    var vendedor = documentos[i].Vendedor;
+                    var fechaVenta = documentos[i].FechaVenta;
+                    var montoDpto = documentos[i].MontoDpto;
+                    var nroDocumento = documentos[i].NroFactura;
+                    var montoTotalFactura = documentos[i].MontoTotalFactura;
+                    
+                    switch (estado) {
+                        /*
+                        si esta libre: ver las ofertas vinculadas a distintos clientes, el plan de pagos, el vendedor, 
+                        monto, fecha, tipologia del departamento(con esto el vendedor ya sabe las caracteristicas)
+                        * */
+                        case 'Libre': // plan de pago
+                            //alert("entro en libres " + tipoDoc);
+                            if (tipoDoc == "Ofertas de ventas") {
+                                var docu = "Oferta de venta";
+                                $(".tab-titulo, .tab-descr").removeAttr('style');//css('display', 'inline');
+                                // Pestaña Informacion
+                                $('.titDocModal').append("<h5>" + tipoDoc + "</h5>");
+                                liInfoLibres = //'<li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: ' + cliente + '</li>'+
+                                    '<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: ' + vendedor + '</li>'+
+                                    '<li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: ' + fechaVenta.split(' ')[0] + '</li>'+
+                                    '<li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: ' + separadorMiles(montoDpto.replace(',', '.')) + '</li>';
+                                if (separadorMiles(montoTotalFactura.replace(',', '.')) != "0,00") {
+                                    // Pestaña Documentos relacionados
+                                    docuLibres += '<tr><td><div class="d-inline-block align-middle">' +
+                                        '<div class="d-inline-block"><p class="text-muted m-b-0">' + docu + ' Nro: ' + nroDocumento + '</p></div></div></td>' +
+                                        '<td class="text-left">' + cliente + '</td>' +
+                                        '<td class="text-right">' + separadorMiles(montoTotalFactura.replace(',', '.')) + '</td> </tr>';
+                                }
+                                
+                                // Agregar pestañas al modal
+                                $("#liInfoDes").append(liInfoLibres);
+                                $(".est-unidad-modal").html("");
+                                $(".est-unidad-modal").append('<h6>Unidad Libre</h6>');
+                                ofertaVentaCount++;
+                            }
+                            break;
+                        /*
+                         si esta asignado: orden de venta con su doc num, solo 1 doc vinculado ya que una persona lo 
+                         compro, con que monto cerro, el vendedor que cerro la venta, la fecha
+                         */
+                        case 'Asignado':
+                            if (tipoDoc == "Orden de venta") {
+                                var docuTitu = "Orden de venta";
+                                var docu = "";
+                                $(".tab-titulo, .tab-descr").removeAttr('style');//css('display', 'inline');
+                                // Pestaña Informacion
+                                $('.titDocModal').append("<h5>" + tipoDoc + "</h5>");
+                                var liInfo = //'<li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: ' + cliente + '</li>'+
+                                    '<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: ' + vendedor + '</li>' +
+                                    '<li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: ' + fechaVenta.split(' ')[0] + '</li>' +
+                                    '<li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: ' + separadorMiles(montoDpto.replace(',', '.')) + '</li>';
+                                if (separadorMiles(montoTotalFactura.replace(',', '.')) != "0,00") {
+                                    // Pestaña Documentos relacionados
+                                    docu = '<tr><td><div class="d-inline-block align-middle"><i class="far fa-file-alt text-c-red f-24"></i>' +
+                                        '<div class="d-inline-block"><p class="text-muted m-b-0">' + docuTitu + ' Nro: ' + nroDocumento + '</p></div></div></td>' +
+                                        '<td class="text-right"><h6 class="f-w-700">' + separadorMiles(montoTotalFactura.replace(',', '.')) + '</h6> </td> </tr>';
+                                }
+                                
+                                //alert("liInfo " + liInfo);
+                                // Agregar pestañas al modal
+                                $("#liInfoDes").append(liInfo);
+                                $('#tblModalDocumentos tbody').append(docu);
+                                $(".est-unidad-modal").html("");
+                                $(".est-unidad-modal").append('<h6>Unidad Asignada</h6>');
+                            }
+                            break;
+                        /*
+                         si esta formalizado: factura de reserva(acepta la facturacion total del departamento) o acuerdo globar de ventas(pago a cuotas) ver los datos 
+                         del cliente, fecha, importe, docnum
+                         */
+                        case 'Formalizado':
+                            if (tipoDoc == "Factura" || tipoDoc == "Acuerdo global de ventas") {
+                                var docuTitu = "Factura y/o Acuerdo global de ventas";
+                                $(".tab-titulo, .tab-descr").removeAttr('style');//css('display', 'inline');
+                                var liInfo = "";
+                                var docu = "";
+                                //alert(documentos[i].Cliente + " -*- " + cliente.length);
+                                if (formalCount == 0 && cliente.length > 0) {
+                                    // Pestaña Informacion
+                                    $('.titDocModal').append("<h5>" + docuTitu + "</h5>");
+                                    liInfo = '<li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: ' + cliente + '</li>' +
+                                        //'<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: ' + vendedor + '</li>' +
+                                        '<li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: ' + fechaVenta.split(' ')[0] + '</li>' +
+                                        '<li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: ' + separadorMiles(montoDpto.replace(',', '.')) + '</li>';
+                                    formalCount++;
+                                }
+                                if (separadorMiles(montoTotalFactura.replace(',', '.')) != "0,00") {
+                                    // Pestaña Documentos relacionados
+                                    docu = '<tr><td><div class="d-inline-block align-middle"><i class="far fa-file-alt text-c-red f-24"></i>' +
+                                        '<div class="d-inline-block"><p class="text-muted m-b-0">' + tipoDoc + ' Nro: ' + nroDocumento + '</p></div></div></td>' +
+                                        '<td class="text-right"><h6 class="f-w-700">' + separadorMiles(montoTotalFactura.replace(',', '.')) + '</h6> </td> </tr>';
+                                }
+                                 
+                                // Agregar pestañas al modal
+                                $("#liInfoDes").append(liInfo);
+                                $('#tblModalDocumentos tbody').append(docu);
+                                $(".est-unidad-modal").html("");
+                                $(".est-unidad-modal").append('<h6>Unidad Formalizada</h6>');
+                            }
+                            break;
+                        case 'Reservado':
+                            $(".est-unidad-modal").html("");
+                            //if (estado.charAt(cadena.length - 1) == 'o') estado = estado.slice(0, -1) + 'a';
+                            if (textoCount == 0) $('.contenido-modal').prepend('<h5 class="info-estado-modal text-center">Unidad Reservada</h5>'); //.slice(0, -1)
+                            textoCount++;
+                            break;
+                        case 'Protocolizado':
+                            $(".est-unidad-modal").html("");
+                            if (textoCount == 0) $('.contenido-modal').prepend('<h5 class="info-estado-modal text-center">Unidad Protocolizada</h5>'); // .slice(0, -1)
+                            textoCount++;
+                            break;
+                        /*
+                         si esta status entregado: documento de entrega en base a la factura de reserva, con acuerdo globar el 
+                         documento de entrega, se vincula como otro tipo de documento, ya que si es por factura, como es cuota 
+                         el monto sera mayor, ver cliente fecha monto y vendedor
+                         */
+                        case 'Entregado':
+                            if (tipoDoc == "Factura" || tipoDoc == "Acuerdo global de ventas") {
+                                var docuTitu = "Factura y/o Acuerdo global de ventas";
+                                $(".tab-titulo, .tab-descr").removeAttr('style');//css('display', 'inline');
+                                var liInfo = "";
+                                var docu = "";
+                                //alert(documentos[i].Cliente + " -*- " + cliente.length);
+                                if (formalCount == 0 && cliente.length > 0) {
+                                    // Pestaña Informacion
+                                    $('.titDocModal').append("<h5>" + docuTitu + "</h5>");
+                                    liInfo = '<li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: ' + cliente + '</li>' +
+                                        '<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: ' + vendedor + '</li>' +
+                                        '<li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: ' + fechaVenta.split(' ')[0] + '</li>' +
+                                        '<li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: ' + separadorMiles(montoDpto.replace(',', '.')) + '</li>';
+                                    formalCount++;
+                                }
+                                if (separadorMiles(montoTotalFactura.replace(',', '.')) != "0,00") {
+                                    // Pestaña Documentos relacionados
+                                    docu = '<tr><td><div class="d-inline-block align-middle"><i class="far fa-file-alt text-c-red f-24"></i>' +
+                                        '<div class="d-inline-block"><p class="text-muted m-b-0">' + tipoDoc + ' Nro: ' + nroDocumento + '</p></div></div></td>' +
+                                        '<td class="text-right"><h6 class="f-w-700">' + separadorMiles(montoTotalFactura.replace(',', '.')) + '</h6> </td> </tr>';
+                                }
+
+                                // Agregar pestañas al modal
+                                $("#liInfoDes").append(liInfo);
+                                $('#tblModalDocumentos tbody').append(docu);
+                                $(".est-unidad-modal").html("");
+                                $(".est-unidad-modal").append('<h6>Unidad Entregada</h6>');
+                            }
+                            break;
+                        /*
+                         si es alquilado: articulo de tipo servicio, con campos en el detalle de acuerdo al global de ventas, 
+                         mostrar docnum del acuerdo global de ventas, monto, cliente, vendedor
+                         */
+                        case 'Arrendados':
+                            if (tipoDoc == "Acuerdo global de ventas") {
+                                var docuTitu = tipoDoc;
+                                var docu = "";
+                                $(".tab-titulo, .tab-descr").removeAttr('style');//css('display', 'inline');
+                                // Pestaña Informacion
+                                $('.titDocModal').append("<h5>" + tipoDoc + "</h5>");
+                                var liInfo = '<li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: ' + cliente + '</li>' +
+                                    '<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: ' + vendedor + '</li>' +
+                                    //'<li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: ' + fechaVenta.split(' ')[0] + '</li>' +
+                                    '<li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: ' + separadorMiles(montoDpto.replace(',', '.')) + '</li>';
+                                if (separadorMiles(montoTotalFactura.replace(',', '.')) != "0,00") {
+                                    // Pestaña Documentos relacionados
+                                    docu = '<tr><td><div class="d-inline-block align-middle"><i class="far fa-file-alt text-c-red f-24"></i>' +
+                                        '<div class="d-inline-block"><p class="text-muted m-b-0">' + docuTitu + ' Nro: ' + nroDocumento + '</p></div></div></td>' +
+                                        '<td class="text-right"><h6 class="f-w-700">' + separadorMiles(montoTotalFactura.replace(',', '.')) + '</h6> </td> </tr>';
+                                }
+                                
+                                //alert("liInfo " + liInfo);
+                                // Agregar pestañas al modal
+                                $("#liInfoDes").append(liInfo);
+                                $('#tblModalDocumentos tbody').append(docu);
+                                $(".est-unidad-modal").html("");
+                                $(".est-unidad-modal").append('<h6>Unidad Arrendada</h6>');
+                            }
+                            break;
+                        case 'Hipotecado':
+                            $(".est-unidad-modal").html("");
+                            if (textoCount == 0) $('.contenido-modal').prepend('<h5 class="info-estado-modal text-center">Unidad Hipotecada</h5>');
+                            textoCount++;
+                            break;
+                        default:
+                    }
+                }
+                // Si existe mas de una Oferta de venta por Cliente en el estado Libre
+                if (ofertaVentaCount > 0) $('#tblModalDocumentos tbody').append(docuLibres);
+                ofertaVentaCount = 0;
+                textoCount = 0;
+                formalCount = 0;
+                /*
                 if (estado == "Reservadas" || estado == "Protocolizadas" || estado == "Hipotecadas" || estado == "Devueltas") {
                     $('.contenido-modal').prepend('<h5 class="info-estado-modal text-center">Unidad ' + estado.slice(0, -1)+'</h5>');
                 } else { // Libres, Asignadas, Formalizadas, Entregadas, Alquiladas
@@ -513,7 +684,7 @@ function obtenerInfoUnidades(idUnidad, estado) {
                     // Agregar pestañas al modal
                     $("#liInfoDes").append(liInfo);
                     $('#tblModalDocumentos tbody').append(docu); // + docu + docu + docu);
-                }
+                }*/
             } else {
                 notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
             }
@@ -544,10 +715,8 @@ function macroproyectosDatos(idProy, idTorre) {
                 var total = parseInt(0);
                 var totalPromPropio = parseInt(0);
                 var totalPromTot = parseInt(0);
-                //alert('estado ' + proyecto[0].estado);
                 // Recorro los datos y los voy cargando
                 for (var i = 0; i < proyecto.length; i++) {
-                    //alert('kkjjkjkj estado ' + proyecto[i].estado + " cant " + proyecto.length);
                     var estado = proyecto[i].estado;
                     var cantidad = proyecto[i].cantidad;
                     var promVendidoPropio = proyecto[i].promedioVendidoPropio;
@@ -556,33 +725,31 @@ function macroproyectosDatos(idProy, idTorre) {
                     total += parseInt(cantidad);
                     totalPromPropio += parseInt(promVendidoPropio);
                     totalPromTot += parseInt(promVendidoTotalM2);
-                    //alert(total + " -- " + totalPromPropio + " -- " + totalPromTot + " () " + proyecto[i].promedioVendidoPropio + " () " + proyecto[i].promedioVendidoTotal);
                     var classEstado = "";
                     // Control case para estados
                     switch (estado) {
-                        case 'Libres':
+                        case 'Libre':
                             classEstado = "text-c-green";
                             break;
-                        case 'Asignadas':
+                        case 'Asignado':
                             classEstado = "text-c-yellow";
                             break;
-                        case 'Formalizadas':
+                        case 'Formalizado':
                             classEstado = "text-c-red";
                             break;
-                        case 'Reservadas':
+                        case 'Reservado':
                             classEstado = "text-c-orenge";
                             break;
-                        case 'Protocolizadas':
+                        case 'Protocolizado':
                             classEstado = "text-c-blue";
                             break;
-
-                        case 'Entregadas':
-                            classEstado = "text-c-purple";
+                        case 'Entregado':
+                            classEstado = "text-purpura";
                             break;
-                        case 'Alquiladas':
-                            classEstado = "text-info";
+                        case 'Arrendados/Alquilados':
+                            classEstado = "text-naranja";
                             break;
-                        case 'Hipotecadas':
+                        case 'Hipotecado':
                             classEstado = "text-secondary";
                             break;
                         default:
@@ -596,9 +763,7 @@ function macroproyectosDatos(idProy, idTorre) {
                     // Cargo la lista con las torres obtenidas
                     $('.indiceMacroPorProy').append(htmlMacroPorTorre);
                 }
-                //alert("2)  "+total + " -- " + totalPromPropio + " -- " + totalPromTot);
                 htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"> <div class="row align-items-center text-center">' +
-                    //'<div class="col-4 p-r-0"><i class="fas fa-building f-24"></i></div>' +
                     '<div class="col-12 p-l-0"><h5>Total</h5><h5 class="m-b-30 f-w-700">' + total + '</h5></div></div></div>';
 
                 $('.indiceMacroPorProy').append(htmlMacroPorTorre);
@@ -645,35 +810,35 @@ function macroproyectosDatos(idProy, idTorre) {
                     var cantidad = proyecto[i].cantidad;
                     var promVendidoPropio = proyecto[i].promedioVendidoPropio;
                     var promVendidoTotalM2 = proyecto[i].promedioVendidoTotalM2;
-                    var porcentaje = (proyecto[i].porcentaje);//.toFixed(2);
+                    var porcentaje = (proyecto[i].porcentaje);
                     total += parseInt(cantidad);
                     totalPromPropio += parseInt(promVendidoPropio);
                     totalPromTot += parseInt(promVendidoTotalM2);
                     var classEstado = "";
                     // Control case para estados
                     switch (estado) {
-                        case 'Libres':
+                        case 'Libre':
                             classEstado = "text-c-green";
                             break;
-                        case 'Asignadas':
+                        case 'Asignado':
                             classEstado = "text-c-yellow";
                             break;
-                        case 'Formalizadas':
+                        case 'Formalizado':
                             classEstado = "text-c-red";
                             break;
-                        case 'Reservadas':
+                        case 'Reservado':
                             classEstado = "text-c-orenge";
                             break;
-                        case 'Protocolizadas':
+                        case 'Protocolizado':
                             classEstado = "text-c-blue";
                             break;
-                        case 'Entregadas':
-                            classEstado = "text-c-purple";
+                        case 'Entregado':
+                            classEstado = "text-purpura";
                             break;
-                        case 'Alquiladas':
-                            classEstado = "text-info";
+                        case 'Arrendados/Alquilados':
+                            classEstado = "text-naranja";
                             break;
-                        case 'Hipotecadas':
+                        case 'Hipotecado':
                             classEstado = "text-secondary";
                             break;
                         default:
@@ -687,7 +852,6 @@ function macroproyectosDatos(idProy, idTorre) {
                     $('.indiceMacroPorTorre').append(htmlMacroPorTorre);
                 }
                 htmlMacroPorTorre = '<div class="col-sm-4 b-r-default p-b-20 p-t-20"> <div class="row align-items-center text-center">' +
-                //'<div class="col-4 p-r-0"><i class="fas fa-building f-24"></i></div>' +
                 '<div class="col-12 p-l-0"><h5>Total</h5><h5 class="m-b-30 f-w-700">' + total+'</h5></div></div></div>';
 
                 $('.indiceMacroPorTorre').append(htmlMacroPorTorre);
@@ -721,7 +885,7 @@ function obtenerEstados() {
         async: false,
         cache: false,
         url: document.location.origin + '/Home/obtenerEstados',
-        data: {},//{ "user": $("#txtUser").val(), "pass": $("#txtPass").val() },//JSON.stringify({ "user": $("#txtUser").val(), "pass": $("#txtPass").val() }),//datos,
+        data: {},
         success: function (data) {
             if (data.success) {
                 // Limpio la lista
@@ -732,8 +896,8 @@ function obtenerEstados() {
                 for (var i = 0; i < _estados.length; i++) {
                     var estado = _estados[i].nombre;
                     var chkHtml = '<div class="col-sm-2"><div class="form-check form-check-inline">' +
-                        '<input class="form-check-input" type="checkbox" id="cb' + estado + '" value="' + estado+'">' +
-                        '<label class="form-check-label" for="cb' + estado + '">' + estado + '</label></div></div>';
+                        '<input class="form-check-input" type="checkbox" id="cb' + _estados[i].nombre.split('/')[0] + '" value="' + estado+'">' +
+                        '<label class="form-check-label" for="cb' + _estados[i].nombre.split('/')[0] + '">' + estado + '</label></div></div>';
                     $('.cbEstados').append(chkHtml);
                 }
             } else {

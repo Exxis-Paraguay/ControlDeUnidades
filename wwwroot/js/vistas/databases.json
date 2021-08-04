@@ -1,12 +1,12 @@
 [
   {
-    "nombre": "CP",
-    "servidor": "172.16.20.3:30015",
+    "nombre": "CPINVERSIONESGG",
+    "servidor": "192.168.0.5:30015",
     "usuario": "SYSTEM",
-    "pass": "R3t41l.20"
+    "pass": "V1nsoc4!"
   },
   {
-    "nombre": "CP2",
+    "nombre": "CP",
     "servidor": "172.16.20.3:30015",
     "usuario": "SYSTEM",
     "pass": "R3t41l.20"
