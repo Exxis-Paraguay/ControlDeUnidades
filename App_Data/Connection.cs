@@ -22,7 +22,7 @@ namespace ControlDeUnidades.Controllers
     // https://blogs.sap.com/2014/10/16/bridging-the-gap-between-net-and-hana-using-c/
     public class Connection
     {
-        String Url = "https://172.16.20.3:50000/b1s/v1";
+        String Url =  "https://172.16.20.3:50000/b1s/v1"; // "https://192.168.0.5:50000//b1s/v1";
         String tokenString = "";
         public static OdbcConnection hanaConn;
         //public static string _db { get; set; } = string.Empty;

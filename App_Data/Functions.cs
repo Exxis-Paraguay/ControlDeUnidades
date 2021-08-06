@@ -77,9 +77,13 @@ namespace ControlDeUnidades.App_Data
                     string numero = "\"numero\":\"" + reader[0].ToString() + "\",";
                     string piso = "\"piso\":\"" + reader[1].ToString() + "\",";
                     string estado = "\"estado\":\"" + reader[2].ToString() + "\",";
-                    string tipo = "\"tipo\":\"" + reader[3].ToString() + "\"";
+                    string tipo = "\"tipo\":\"" + reader[3].ToString() + "\",";
+                    string tipoUnidad = "\"tipoUnidad\":\"" + reader[4].ToString() + "\",";
+                    string tipoUnidDes = "\"tipoUnidDes\":\"" + reader[5].ToString() + "\",";
+                    string vencido = "\"vencido\":\"" + reader[7].ToString() + "\"";
 
-                    string row = "{" + numero + piso + estado + tipo + "}";
+
+                    string row = "{" + numero + piso + estado + tipo + tipoUnidad + tipoUnidDes + vencido + "}";
 
                     if (flag > 0) col += "," + row;
                     else col += row;
@@ -196,8 +200,11 @@ namespace ControlDeUnidades.App_Data
                     string fechaVenta = "\"FechaVenta\":\"" + reader[3].ToString() + "\",";
                     string montoDpto = "\"MontoDpto\":\"" + reader[4].ToString() + "\",";
                     string nroFactura = "\"NroFactura\":\"" + reader[5].ToString() + "\",";
-                    string montoTotalFactura = "\"MontoTotalFactura\":\"" + reader[6].ToString() + "\"";
-                    string row = "{" + tipoDoc + cliente + vendedor + fechaVenta + montoDpto + nroFactura+montoTotalFactura +"}";
+                    string montoTotalFactura = "\"MontoTotalFactura\":\"" + reader[6].ToString() + "\",";
+                    string moneda = "\"Moneda\":\"" + reader[7].ToString() + "\",";
+                    string fechaVenci = "\"FechaVenci\":\"" + reader[8].ToString() + "\",";
+                    string vencido = "\"Vencido\":\"" + reader[10].ToString() + "\"";
+                    string row = "{" + tipoDoc + cliente + vendedor + fechaVenta + montoDpto + nroFactura + montoTotalFactura + moneda + fechaVenci + vencido + "}";
 
                     if (flag > 0) col += "," + row;
                     else col += row;
