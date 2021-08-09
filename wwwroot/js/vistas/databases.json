@@ -3,12 +3,14 @@
     "nombre": "CPINVERSIONESGG",
     "servidor": "192.168.0.5:30015",
     "usuario": "SYSTEM",
-    "pass": "V1nsoc4!"
+    "pass": "V1nsoc4!",
+    "sl": "https://192.168.0.5:50000/b1s/v1"
   },
   {
     "nombre": "CP",
     "servidor": "172.16.20.3:30015",
     "usuario": "SYSTEM",
-    "pass": "R3t41l.20"
+    "pass": "R3t41l.20",
+    "sl": "https://172.16.20.3:50000/b1s/v1"
   }
 ]

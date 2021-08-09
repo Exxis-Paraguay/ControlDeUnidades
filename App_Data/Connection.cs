@@ -22,7 +22,7 @@ namespace ControlDeUnidades.Controllers
     // https://blogs.sap.com/2014/10/16/bridging-the-gap-between-net-and-hana-using-c/
     public class Connection
     {
-        String Url =  "https://172.16.20.3:50000/b1s/v1"; // "https://192.168.0.5:50000//b1s/v1";
+        String Url = "";//"https://172.16.20.3:50000/b1s/v1"; // "https://192.168.0.5:50000//b1s/v1";
         String tokenString = "";
         public static OdbcConnection hanaConn;
         //public static string _db { get; set; } = string.Empty;
@@ -38,6 +38,24 @@ namespace ControlDeUnidades.Controllers
             {
                 _db = database;
                 Functions._dbNew = database;
+
+                // Leemos el archivo 'databases.json' 
+                using (StreamReader archivo = File.OpenText(@"wwwroot/js/vistas/databases.json"))
+                {
+                    // Leemos los datos del archivo 'databases.json' y reemplazar caracteres
+                    string json = archivo.ReadToEnd().Replace("\r\n ", "").Replace(@"\", "");
+                    // Deserializamos el archivo 'databases.json' 
+                    dynamic miarray = JsonConvert.DeserializeObject(json);
+                    // Recorremos el array de datos del JSON 
+                    foreach (var item in miarray)
+                    {
+                        // Cargar los datos de user y pass
+                        if (item.nombre == _db)
+                        {
+                            Url = item.sl;
+                        }
+                    }
+                }
 
                 string UrlLogin = Url + "/Login" ;
                 IRestClient Client = new RestClient(UrlLogin);

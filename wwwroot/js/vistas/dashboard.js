@@ -153,7 +153,7 @@ $(document).ready(function () {
         var cont = parseInt(0);
         var cont2 = parseInt(0);
         //oculto todo
-        $(".Departamentos , .Cocheras, .Bauleras").css("display", "none");
+        $(".Departamentos , .Cocheras, .Bauleras, .motos").css("display", "none");
         $(".Libre, .Asignado, .Reservado, .Formalizado, .Protocolizado, .Entregado, .Arrendados, .Hipotecado").css("display", "none");
         var classw = "";
         //por cada filtro seleccionado se muestra
@@ -176,7 +176,7 @@ $(document).ready(function () {
                 $("." + $(this).val().split('/')[0]).removeAttr("style");
                 cntFlag++;
             });
-            if (cntFlag == 0) $(".Departamentos , .Cocheras, .Bauleras").removeAttr("style");
+            if (cntFlag == 0) $(".Departamentos , .Cocheras, .Bauleras, .motos").removeAttr("style");
         }
     });
 
@@ -186,7 +186,7 @@ $(document).ready(function () {
         var cont = parseInt(0);
         var cont2 = parseInt(0);
         //oculto todo
-        $(".Departamentos , .Cocheras, .Bauleras").css("display", "none");
+        $(".Departamentos , .Cocheras, .Bauleras, .motos").css("display", "none");
         $(".Libre, .Asignado, .Reservado, .Formalizado, .Protocolizado, .Entregado, .Arrendados, .Hipotecado").css("display", "none");
         var classw = "";
         //por cada filtro seleccionado se muestra
@@ -606,7 +606,7 @@ function obtenerInfoUnidades(idUnidad, estado) {
                             if (tipoDoc == "Factura" || tipoDoc == "Acuerdo global de ventas") {
                                 var vencidoFch = "";
                                 if (tipoDoc == "Factura") {
-                                    vencidoFch = '<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: ' + vendedor + '</li>';
+                                    vencidoFch = '<td></td>';
                                 }
                                 var docuTitu = "Factura y/o Acuerdo global de ventas";
                                 $(".tab-titulo, .tab-descr").removeAttr('style');//css('display', 'inline');
