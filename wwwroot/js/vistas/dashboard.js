@@ -6,12 +6,13 @@ $(document).ready(function () {
      * LLAMADA A FUNCIONES ===============================================================================
      */
     obtenerProyectos();
-
+    
+    
     /*
      * CSS ===============================================================================
      */
 
-    $("#bellNotificacion").css("display", "none");
+    
     // Ocultar modal
     $("#dialogInfoUnidad").css("display", "none");
     // Ocultar Sector Unidades
@@ -24,6 +25,18 @@ $(document).ready(function () {
     /*
      * EVENTOS ===============================================================================
      */
+
+    var ratonParado = null;
+    var milisegundosLimite = 900000;// 15 minutos //1800000; //30 minutos
+    // Controla el vencimiento de la sesion
+    $(document).on('mousemove', function () {
+        clearTimeout(ratonParado);
+
+        ratonParado = setTimeout(function () {
+            //refrescar()
+            logout();
+        }, milisegundosLimite);
+    });
     // ------------------------------------- click ----------------------------------------------------
     // Ocultar menu lateral
     $("#mobile-collapse").click();
@@ -252,6 +265,12 @@ function notificacion(message, type) { // type: danger, success
     });
 };
 
+//Recargar pagina
+function refrescar() {
+    //Actualiza la página
+    location.reload();
+}
+
 /*
 * FUNCIONES ===============================================================================
 */
@@ -370,7 +389,7 @@ function obtenerUnidades(idTorre) {
                     var vencido = proyecto[i].vencido;
                     var tipo = "";
                     nuevoTr = false;
-                    if (vencido == "S") iconVencido = '<i class="fas fa-info text-c-red mat-icon f-24"></i>';
+                    if (vencido == "S") iconVencido = '<i class="fas fa-info text-c-white mat-icon f-24"></i>';
                     // Control case para estados
                     switch (estadoCod) {
                         case '01':
@@ -499,7 +518,7 @@ function breadcrumb(page) {
 
 // Obtiene la información de la unidad seleccionada
 function obtenerInfoUnidades(idUnidad, estado) {
-    idUnidad = "2 - 11";
+    //idUnidad = "2 - 11";
     //Llamada al método obtenerProyectos desde el controlador
     $.ajax({
         contentType: 'application/json; charset=utf-8',
@@ -514,6 +533,7 @@ function obtenerInfoUnidades(idUnidad, estado) {
                 var ofertaVentaCount = parseInt(0);
                 var textoCount = parseInt(0);
                 var formalCount = parseInt(0);
+                var libreCount = parseInt(0);
                 var liInfoLibres = "";
                 var docuLibres = "";
                 //Vaciar pestañas
@@ -546,13 +566,18 @@ function obtenerInfoUnidades(idUnidad, estado) {
                             //alert("entro en libres " + tipoDoc);
                             if (tipoDoc == "Ofertas de ventas") {
                                 var docu = "Oferta de venta";
-                                $(".tab-titulo, .tab-descr").removeAttr('style');//css('display', 'inline');
-                                // Pestaña Informacion
-                                $('.titDocModal').append("<h5>" + tipoDoc + "</h5>");
-                                liInfoLibres = //'<li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: ' + cliente + '</li>'+
-                                    '<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: ' + vendedor + '</li>' +
-                                    '<li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: ' + fechaVenta.split(' ')[0] + '</li>' +
-                                '<li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: ' + moneda+ ' ' + separadorMiles(montoDpto.replace(',', '.')) + '</li>';
+                                if (libreCount == 0 && fechaVenta.split(' ')[0].length > 0) {
+                                    $(".tab-titulo, .tab-descr").removeAttr('style');//css('display', 'inline');
+                                    // Pestaña Informacion
+                                    $('.titDocModal').append("<h5>" + tipoDoc + "</h5>");
+                                    liInfoLibres = //'<li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: ' + cliente + '</li>'+
+                                        '<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: ' + vendedor + '</li>' +
+                                        '<li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: ' + fechaVenta.split(' ')[0] + '</li>' +
+                                        '<li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: ' + moneda + ' ' + separadorMiles(montoDpto.replace(',', '.')) + '</li>';
+                                    libreCount++;
+                                }
+                                
+
                                 if (separadorMiles(montoTotalFactura.replace(',', '.')) != "0,00") {
                                     // Pestaña Documentos relacionados
                                     docuLibres += '<tr><td><div class="d-inline-block align-middle">' +
@@ -565,6 +590,7 @@ function obtenerInfoUnidades(idUnidad, estado) {
                                 $("#liInfoDes").append(liInfoLibres);
                                 $(".est-unidad-modal").html("");
                                 $(".est-unidad-modal").append('<h6>Unidad Libre</h6>');
+                                liInfoLibres = "";
                                 ofertaVentaCount++;
                             }
                             break;
@@ -725,26 +751,7 @@ function obtenerInfoUnidades(idUnidad, estado) {
                 ofertaVentaCount = 0;
                 textoCount = 0;
                 formalCount = 0;
-                /*
-                if (estado == "Reservadas" || estado == "Protocolizadas" || estado == "Hipotecadas" || estado == "Devueltas") {
-                    $('.contenido-modal').prepend('<h5 class="info-estado-modal text-center">Unidad ' + estado.slice(0, -1)+'</h5>');
-                } else { // Libres, Asignadas, Formalizadas, Entregadas, Alquiladas
-                    $(".tab-titulo, .tab-descr").removeAttr('style');//css('display', 'inline');
-                    // Pestaña Informacion
-                    $('.titDocModal').append("<h5>" + proyecto[0].Cliente+"</h5>");
-                    var cliente = '<li class="list-group-item"><i class="fas fa-user mat-icon f-14"></i> Cliente: ' + proyecto[0].Cliente+'</li>';
-                    var vendedor = '<li class="list-group-item"><i class="fas fa-briefcase mat-icon f-14"></i> Vendedor: ' + proyecto[0].Vendedor + '</li>';
-                    var fecha = '<li class="list-group-item"><i class="fas fa-calendar mat-icon f-14"></i> Fecha: ' + proyecto[0].FechaVenta.split(' ')[0] + '</li>';
-                    var monto = '<li class="list-group-item"><i class="fa fa-money mat-icon f-14"></i> Monto: ' + separadorMiles(proyecto[0].MontoDpto.replace(',', '.')) + '</li>';
-                    var liInfo = cliente + vendedor + fecha + monto;
-                    // Pestaña Documentos relacionados
-                    var docu = '<tr><td><div class="d-inline-block align-middle"><i class="far fa-file-alt text-c-red f-24"></i>' +
-                        '<div class="d-inline-block"><p class="text-muted m-b-0">Factura Nro: ' + proyecto[0].NroFactura + '</p></div></div>' +
-                        '</td> <td class="text-right"><h6 class="f-w-700">' + separadorMiles(proyecto[0].MontoTotalFactura.replace(',','.')) + '</h6> </td> </tr>';
-                    // Agregar pestañas al modal
-                    $("#liInfoDes").append(liInfo);
-                    $('#tblModalDocumentos tbody').append(docu); // + docu + docu + docu);
-                }*/
+                libreCount = 0;
             } else {
                 notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
             }
@@ -775,16 +782,26 @@ function macroproyectosDatos(idProy, idTorre) {
                 var total = parseInt(0);
                 var totalPromPropio = parseInt(0);
                 var totalPromTot = parseInt(0);
+                var countPromedioM2 = parseInt(0);
                 // Recorro los datos y los voy cargando
                 for (var i = 0; i < proyecto.length; i++) {
                     var estado = proyecto[i].estado;
-                    var cantidad = proyecto[i].cantidad;
+                    var cantidad = parseInt(proyecto[i].cantidad);
                     var promVendidoPropio = proyecto[i].promedioVendidoPropio;
                     var promVendidoTotalM2 = proyecto[i].promedioVendidoTotalM2;
                     var porcentaje = (proyecto[i].porcentaje);//.toFixed(2);
                     total += parseInt(cantidad);
-                    totalPromPropio += parseInt(promVendidoPropio);
-                    totalPromTot += parseInt(promVendidoTotalM2);
+                    
+                    //if (estado != "Libre" && estado != "Asignado") {
+
+
+                    if (parseInt(promVendidoTotalM2) > 0) {
+                        
+                        countPromedioM2 += cantidad;
+                        totalPromPropio += parseInt(promVendidoPropio);
+                        totalPromTot += parseInt(promVendidoTotalM2);
+                    }
+                    //}
                     var classEstado = "";
                     // Control case para estados
                     switch (estado) {
@@ -827,13 +844,22 @@ function macroproyectosDatos(idProy, idTorre) {
                     '<div class="col-12 p-l-0"><h5>Total</h5><h5 class="m-b-30 f-w-700">' + total + '</h5></div></div></div>';
 
                 $('.indiceMacroPorProy').append(htmlMacroPorTorre);
-
+                var totalPromPropioHtml = parseInt(0);
+                var totalPromTotHtml = parseInt(0);
+                if (countPromedioM2 == 0) {
+                    totalPromPropioHtml = 0;
+                    totalPromTotHtml = 0;
+                } else {
+                    totalPromPropioHtml = separadorMiles(totalPromPropio / countPromedioM2);
+                    totalPromTotHtml = separadorMiles(totalPromTot / countPromedioM2);
+                }
+                //alert("venta total " + totalPromPropioHtml + " metros 2 " + totalPromTotHtml);
                 htmlMacroPorTorre = '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
                     '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
-                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido</span><h5>' + separadorMiles(totalPromPropio) + '</h5> </div></div> </div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido</span><h5>' + totalPromPropioHtml + '</h5> </div></div> </div>' +
                     '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
                     '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
-                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + separadorMiles(totalPromTot) + '</h5> </div></div> </div>';
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + totalPromTotHtml + '</h5> </div></div> </div>';
 
                 $('.promediosTotalesProy').append(htmlMacroPorTorre);
                 htmlMacroPorTorre = "";
@@ -864,16 +890,24 @@ function macroproyectosDatos(idProy, idTorre) {
                 var total = parseInt(0);
                 var totalPromPropio = parseInt(0);
                 var totalPromTot = parseInt(0);
+                var countPromedioM2 = parseInt(0);
                 // Recorro los datos y los voy cargando
                 for (var i = 0; i < proyecto.length; i++) {
+                    
                     var estado = proyecto[i].estado;
-                    var cantidad = proyecto[i].cantidad;
+                    var cantidad = parseInt(proyecto[i].cantidad);
                     var promVendidoPropio = proyecto[i].promedioVendidoPropio;
                     var promVendidoTotalM2 = proyecto[i].promedioVendidoTotalM2;
                     var porcentaje = (proyecto[i].porcentaje);
+                    
                     total += parseInt(cantidad);
-                    totalPromPropio += parseInt(promVendidoPropio);
-                    totalPromTot += parseInt(promVendidoTotalM2);
+                    
+                    if (parseInt(promVendidoTotalM2) > 0) {
+
+                        countPromedioM2 += cantidad;
+                        totalPromPropio += parseInt(promVendidoPropio);
+                        totalPromTot += parseInt(promVendidoTotalM2);
+                    }
                     var classEstado = "";
                     // Control case para estados
                     switch (estado) {
@@ -915,13 +949,21 @@ function macroproyectosDatos(idProy, idTorre) {
                     '<div class="col-12 p-l-0"><h5>Total</h5><h5 class="m-b-30 f-w-700">' + total + '</h5></div></div></div>';
 
                 $('.indiceMacroPorTorre').append(htmlMacroPorTorre);
-
+                var totalPromPropioHtml = parseInt(0);
+                var totalPromTotHtml = parseInt(0);
+                if (countPromedioM2 == 0) {
+                    totalPromPropioHtml = 0;
+                    totalPromTotHtml = 0;
+                } else {
+                    totalPromPropioHtml = separadorMiles(totalPromPropio / countPromedioM2);
+                    totalPromTotHtml = separadorMiles(totalPromTot / countPromedioM2);
+                }
                 htmlMacroPorTorre = '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
                     '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
-                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido</span><h5>' + separadorMiles(totalPromPropio) + '</h5> </div></div> </div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido</span><h5>' + totalPromPropioHtml + '</h5> </div></div> </div>' +
                     '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
                     '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
-                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + separadorMiles(totalPromTot) + '</h5> </div></div> </div>';
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + totalPromTotHtml + '</h5> </div></div> </div>';
 
                 $('.promediosTotalesTorres').append(htmlMacroPorTorre);
                 htmlMacroPorTorre = "";
