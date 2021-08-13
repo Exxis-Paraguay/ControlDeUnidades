@@ -403,7 +403,7 @@ function obtenerUnidades(idTorre) {
                             break;
                         case '03':
                             estado = "Reservado";
-                            classEstado = "bg-c-orenge";
+                            classEstado = "bg-pink";
                             break;
                         case '04':
                             estado = "Formalizado";
