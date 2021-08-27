@@ -54,8 +54,6 @@
     </div>
 
     <!-- UNIDADES ------------------------------------- -->
-    
-
     <div id="torre1" class="torre">
         <div class="row">
             <div class="col-sm-10">
@@ -71,13 +69,13 @@
                         <button id="btnVolverFiltroTorres" class="btn waves-effect waves-light btn-inverse btn-outline-inverse"><i class="icofont icofont-exchange"></i>Volver a Torres</button>
                     </div>
                 </form>
-                
+
             </div>
         </div>
 
         <div class="col-xl-12 col-md-12">
             <!-- Inicio filtro por piso/cochera/baulera -->
-            <div class="row filtro-estado">
+            <div class="row filtro-articulo-tipo">
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-block caption-breadcrumb">
@@ -90,22 +88,28 @@
                                 </div>
                             </div>
                             <div class="row page-header-breadcrumb cbPCB">
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="cbPisos" value="Pisos">
-                                        <label class="form-check-label" for="cbPisos">Pisos</label>
+                                        <input class="form-check-input" type="checkbox" id="cbPisos" value="Departamentos">
+                                        <label class="form-check-label" for="cbPisos">Departamentos</label>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" id="cbCocheras" value="Cocheras">
                                         <label class="form-check-label" for="cbCocheras">Cocheras</label>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" id="cbBauleras" value="Bauleras">
                                         <label class="form-check-label" for="cbBauleras">Bauleras</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="cbMotos" value="motos">
+                                        <label class="form-check-label" for="cbMotos">Estacionamiento para motos</label>
                                     </div>
                                 </div>
                             </div>
@@ -136,25 +140,25 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="cbAsignados" value="Asignados">
+                                        <input class="form-check-input" type="checkbox" id="cbAsignados" value="Asignadas">
                                         <label class="form-check-label" for="cbAsignados">Asignados</label>
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="cbReservados" value="Reservados">
+                                        <input class="form-check-input" type="checkbox" id="cbReservados" value="Reservadas">
                                         <label class="form-check-label" for="cbReservados">Reservados</label>
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="cbFormalizados" value="Formalizados">
+                                        <input class="form-check-input" type="checkbox" id="cbFormalizados" value="Formalizadas">
                                         <label class="form-check-label" for="cbFormalizados">Formalizados</label>
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="cProtocolizados" value="Protocolizados">
+                                        <input class="form-check-input" type="checkbox" id="cProtocolizados" value="Protocolizadas">
                                         <label class="form-check-label" for="cbProtocolizados">Protocolizados</label>
                                     </div>
                                 </div>
@@ -176,81 +180,40 @@
             </div>
             <!-- Fin Unidades -->
         </div>
-
-
     </div>
+
     <br /> <br /> <br />
     <!-- Indice Macroproyectos inicio -->
-    <div class="col-xl-12">
-        <div class="card proj-progress-card">
-            <div class="card-block">
-                <div class="row">
-                    <div class="col-xl-2 col-md-2">
-                        <h6>Libres</h6>
-                        <h5 class="m-b-30 f-w-700">Nro 86<span class="text-c-green m-l-10">29.97%</span></h5>
-                        <div class="progress">
-                            <div class="progress-bar bg-c-green" style="width:30%"></div>
+    <div class="row">
+        <div class="col-xl-6 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-header-text">Datos por Torre</h5>
+                </div>
+                <div class="card mat-stat-card">
+                    <div class="datos-por-torre card-block">
+                        <div class="indiceMacroPorTorre row align-items-center b-b-default">
+
                         </div>
-                    </div>
-                    <div class="col-xl-2 col-md-2">
-                        <h6>Asignados</h6>
-                        <h5 class="m-b-30 f-w-700">Nro 31<span class="text-c-yellow m-l-10">10.80%</span></h5>
-                        <div class="progress">
-                            <div class="progress-bar bg-c-yellow" style="width:11%"></div>
+                        <div class="promediosTotalesTorres row align-items-center b-b-default">
+                            
                         </div>
-                    </div>
-                    <div class="col-xl-2 col-md-2">
-                        <h6>Reservadas</h6>
-                        <h5 class="m-b-30 f-w-700">Nro 0<span class="text-c-orenge m-l-10">0.00%</span></h5>
-                        <div class="progress">
-                            <div class="progress-bar bg-c-red" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-md-2">
-                        <h6>Formalizadas</h6>
-                        <h5 class="m-b-30 f-w-700">Nro 170<span class="text-c-red m-l-10">59.23%</span></h5>
-                        <div class="progress">
-                            <div class="progress-bar bg-c-red" style="width:59%"></div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-md-2">
-                        <h6>Protocolizadas</h6>
-                        <h5 class="m-b-30 f-w-700">Nro 0<span class="text-c-blue m-l-10">0.00%</span></h5>
-                        <div class="progress">
-                            <div class="progress-bar bg-c-blue" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-md-2 text-center">
-                        <h6>TOTAL</h6>
-                        <h3 class="m-b-30 f-w-700">287</h3>
                     </div>
                 </div>
-                <br>
-                <div class="row">
-                    <div class="col-xl-12 col-md-12">
-                        <div class="row align-items-center">
-                            <div class="col-sm-6 p-b-20 p-t-20 b-r-default">
-                                <div class="row align-items-center text-center">
-                                    <div class="col-1 p-r-0">
-                                        <i class="fas fa-signal text-c-red f-24"></i>
-                                    </div>
-                                    <div class="col-11 p-l-0">
-                                        <h5>Precio Base Promedio Vendido</h5>
-                                        <h4>68.232,87</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 p-b-20 p-t-20">
-                                <div class="row align-items-center text-center">
-                                    <div class="col-1 p-r-0">
-                                        <i class="fas fa-signal text-c-red f-24"></i>
-                                    </div>
-                                    <div class="col-11 p-l-0">
-                                        <h5>Precio Base Promedio Vendido Metros</h5>
-                                        <h4>1.471,57</h4>
-                                    </div>
-                                </div>
-                            </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-header-text">Datos por Proyecto</h5>
+                </div>
+                <div class="card mat-stat-card">
+                    <div class="datos-por-proy card-block">
+                        <div class="indiceMacroPorProy row align-items-center b-b-default">
+
+                        </div>
+                        <div class="promediosTotalesProy row align-items-center b-b-default">
+
                         </div>
                     </div>
                 </div>
@@ -258,8 +221,6 @@
         </div>
     </div>
     <!-- Indice Macroproyecto fin -->
-
-
 </div>
-<!-- SECTOR UNIDADES FIN -->
+<!-- SECTOR TORRES Y UNIDADES FIN -->
 <!-- ===================================================================================================================================== -->
