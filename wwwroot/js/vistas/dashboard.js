@@ -1,6 +1,7 @@
 ﻿// Variables Globales
 var _nombreProy, _nombreTorre = "";
 var _idProy, _idTorre = "0";
+var filtrosSeleccionados = "";
 $(document).ready(function () {
     /*
      * LLAMADA A FUNCIONES ===============================================================================
@@ -160,7 +161,7 @@ $(document).ready(function () {
     /*
      * FILTROS ===============================================================================
      */
-    var filtrosSeleccionados = "";
+    
     var conSel = parseInt(0);
     // Filtro Pisos/Cocheras/Bauleras
     $('.filtro-articulo-tipo input.form-check-input').click(function () {
