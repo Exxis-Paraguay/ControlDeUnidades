@@ -173,16 +173,10 @@ $(document).ready(function () {
         $(".Libre, .Asignado, .Reservado, .Formalizado, .Protocolizado, .Entregado, .Arrendados, .Hipotecado").css("display", "none");
         var classw = "";
 
-        filtrosSeleccionados = "";
-        conSel = 0;
+        
         //por cada filtro seleccionado se muestra
         $(".cbPCB :checkbox:checked").each(function () {
-            if (conSel == 0) filtrosSeleccionados += $(this).val();
-            else filtrosSeleccionados += "," + $(this).val();
-
-            macroproyectosDatos(_idProy, _idTorre);// Agregado
-
-            conSel++;
+            
             //alert("classw 0 " + $(this).val() + " filtrosSeleccionados " + filtrosSeleccionados);
             classw = $(this).val();
             $("." + $(this).val()).removeAttr("style");
@@ -217,9 +211,48 @@ $(document).ready(function () {
         $(".Departamentos , .Cocheras, .Bauleras, .motos").css("display", "none");
         $(".Libre, .Asignado, .Reservado, .Formalizado, .Protocolizado, .Entregado, .Arrendados, .Hipotecado").css("display", "none");
         var classw = "";
+
+        filtrosSeleccionados = "";
+        conSel = 0;
         //por cada filtro seleccionado se muestra
         $(".cbEstados :checkbox:checked").each(function () {
             //$("." + $(this).val().split('/')[0]).removeAttr("style");
+
+            var codEstado = "0";
+            switch ($(this).val().split('/')[0]) {
+                case 'Libre':
+                    codEstado = "01";
+                    break;
+                case 'Asignado':
+                    codEstado = "02";
+                    break;
+                case 'Reservado':
+                    codEstado = "03";
+                    break;
+                case 'Formalizado':
+                    codEstado = "04";
+                    break;
+                case 'Protocolizado':
+                    codEstado = "05";
+                    break;
+                case 'Hipotecado':
+                    codEstado = "06";
+                    break;
+                case 'Arrendados':
+                    codEstado = "07";
+                    break;
+                case 'Entregado':
+                    codEstado = "08";
+                    break;
+                default:
+            }
+            if (conSel == 0) filtrosSeleccionados += codEstado;
+            else filtrosSeleccionados += "," + codEstado;
+            conSel++;
+            //alert(filtrosSeleccionados);
+            macroproyectosDatos(_idProy, _idTorre);// Agregado
+
+
             classw = $(this).val();
             cont++;
             $(".cbPCB :checkbox:checked").each(function () {
