@@ -200,7 +200,7 @@ $(document).ready(function () {
             if (conSel == 0) filtrosSeleccionados += codEstado;
             else filtrosSeleccionados += "," + codEstado;
             conSel++;
-            //alert(filtrosSeleccionados);
+            alert(filtrosSeleccionados);
             macroproyectosDatos(_idProy, _idTorre);// Agregado
 
 
@@ -248,7 +248,7 @@ $(document).ready(function () {
             cont++;
             $(".cbPCB :checkbox:checked").each(function () {
                 $("." + $(this).val().split('/')[0] + "." + classw).removeAttr("style");
-                alert("classw 1 " + $(this).val());
+                //alert("classw 1 " + $(this).val());
                 //filtrosSeleccionados += $(this).val();
                 cont2++;
             });
@@ -260,7 +260,7 @@ $(document).ready(function () {
         if (cont == 0) {
             $(".cbPCB :checkbox:checked").each(function () {
                 $("." + $(this).val().split('/')[0]).removeAttr("style");
-                alert("classw 2 " + $(this).val());
+                //alert("classw 2 " + $(this).val());
                 //filtrosSeleccionados += $(this).val();
                 cntFlag++;
             });
@@ -810,6 +810,8 @@ function obtenerInfoUnidades(idUnidad, estado) {
 
 // Arma el macroproyecto
 function macroproyectosDatos(idProy, idTorre) {
+    //alert("idProy " + idProy + " idTorre " + idTorre + " filtrosSeleccionados " + filtrosSeleccionados);
+    //if (filtrosSeleccionados == "") filtrosSeleccionados = "0";
     // Datos por proyecto .datos-por-proyecto
     $.ajax({
         contentType: 'application/json; charset=utf-8',
@@ -918,6 +920,7 @@ function macroproyectosDatos(idProy, idTorre) {
         }
     });
 
+    
     // Datos por torre .datos-por-proyecto
     $.ajax({
         contentType: 'application/json; charset=utf-8',
@@ -926,7 +929,7 @@ function macroproyectosDatos(idProy, idTorre) {
         async: false,
         cache: false,
         url: document.location.origin + '/Home/obtenerMacroproyecto',
-        data: { "idProy": idProy, "idTorre": idTorre, "idTipoUnidad": "01" },
+        data: { "idProy": idProy, "idTorre": idTorre, "idTipoUnidad": filtrosSeleccionados },
         success: function (data) {
             if (data.success) {
                 // Limpio la lista
@@ -1033,7 +1036,7 @@ function macroproyectosDatos(idProy, idTorre) {
         async: false,
         cache: false,
         url: document.location.origin + '/Home/obtenerMacroproyectoAll',
-        data: { "idProy": idProy, "idTorre": "0", "idTipoUnidad": "01" },
+        data: { "idProy": idProy, "idTorre": "0", "idTipoUnidad": filtrosSeleccionados },
         success: function (data) {
             if (data.success) {
                 // Limpio la lista
@@ -1099,7 +1102,7 @@ function macroproyectosDatos(idProy, idTorre) {
         async: false,
         cache: false,
         url: document.location.origin + '/Home/obtenerMacroproyectoAll',
-        data: { "idProy": idProy, "idTorre": idTorre, "idTipoUnidad": "01" },
+        data: { "idProy": idProy, "idTorre": idTorre, "idTipoUnidad": filtrosSeleccionados },
         success: function (data) {
             if (data.success) {
                 // Limpio la lista
