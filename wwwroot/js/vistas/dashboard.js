@@ -793,7 +793,7 @@ function macroproyectosDatos(idProy, idTorre) {
         type: "GET",
         async: false,
         cache: false,
-        url: document.location.origin + '/Home/obtenerMacroproyecto',
+        url: document.location.origin + '/Home/obtenerMacroproyectoAll',
         data: { "idProy": idProy, "idTorre": "0", "idTipoUnidad": filtrosSeleccionados },
         success: function (data) {
             if (data.success) {
