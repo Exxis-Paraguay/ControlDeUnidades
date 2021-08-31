@@ -160,6 +160,8 @@ $(document).ready(function () {
     /*
      * FILTROS ===============================================================================
      */
+    var filtrosSeleccionados = "";
+    var conSel = parseInt(0);
     // Filtro Pisos/Cocheras/Bauleras
     $('.filtro-articulo-tipo input.form-check-input').click(function () {
         // recorro filtro de pisos
@@ -169,16 +171,28 @@ $(document).ready(function () {
         $(".Departamentos , .Cocheras, .Bauleras, .motos").css("display", "none");
         $(".Libre, .Asignado, .Reservado, .Formalizado, .Protocolizado, .Entregado, .Arrendados, .Hipotecado").css("display", "none");
         var classw = "";
+
+        filtrosSeleccionados = "";
+        conSel = 0;
         //por cada filtro seleccionado se muestra
         $(".cbPCB :checkbox:checked").each(function () {
+            if (conSel == 0) filtrosSeleccionados += $(this).val();
+            else filtrosSeleccionados += "," + $(this).val();
+
+            macroproyectosDatos(_idProy, _idTorre);// Agregado
+
+            conSel++;
+            //alert("classw 0 " + $(this).val() + " filtrosSeleccionados " + filtrosSeleccionados);
             classw = $(this).val();
-            //$("." + $(this).val()).removeAttr("style");
+            $("." + $(this).val()).removeAttr("style");
+            
             cont++;
             $(".cbEstados :checkbox:checked").each(function () {
                 $("." + $(this).val().split('/')[0] + "." + classw).removeAttr("style");
                 cont2++;
             });
             if (cont2 == 0) $("." + classw).removeAttr("style");
+            //alert("filtrosSeleccionados " + filtrosSeleccionados);
         });
         // Si no se selecciono ningun filtro, se muestra todo
 
@@ -209,19 +223,26 @@ $(document).ready(function () {
             cont++;
             $(".cbPCB :checkbox:checked").each(function () {
                 $("." + $(this).val().split('/')[0] + "." + classw).removeAttr("style");
+                alert("classw 1 " + $(this).val());
+                //filtrosSeleccionados += $(this).val();
                 cont2++;
             });
             if (cont2 == 0) $("." + classw).removeAttr("style");
+            //alert("filtrosSeleccionados " + filtrosSeleccionados);
         });
         var cntFlag = parseInt(0);
         // Si no se selecciono ningun filtro, se muestra todo
         if (cont == 0) {
             $(".cbPCB :checkbox:checked").each(function () {
                 $("." + $(this).val().split('/')[0]).removeAttr("style");
+                alert("classw 2 " + $(this).val());
+                //filtrosSeleccionados += $(this).val();
                 cntFlag++;
             });
+            //alert("filtrosSeleccionados " + filtrosSeleccionados);
             if (cntFlag == 0) $(".Libre, .Asignado, .Reservado, .Formalizado, .Protocolizado, .Entregado, .Arrendados, .Hipotecado").removeAttr("style");
         }
+
 
     });
 });
@@ -772,7 +793,7 @@ function macroproyectosDatos(idProy, idTorre) {
         async: false,
         cache: false,
         url: document.location.origin + '/Home/obtenerMacroproyecto',
-        data: { "idProy": idProy, "idTorre": "0", "idTipoUnidad": "01" },
+        data: { "idProy": idProy, "idTorre": "0", "idTipoUnidad": filtrosSeleccionados },
         success: function (data) {
             if (data.success) {
                 // Limpio la lista
@@ -861,7 +882,7 @@ function macroproyectosDatos(idProy, idTorre) {
                     '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
                     '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + totalPromTotHtml + '</h5> </div></div> </div>';
 
-                $('.promediosTotalesProy').append(htmlMacroPorTorre);
+                //$('.promediosTotalesProy').append(htmlMacroPorTorre);
                 htmlMacroPorTorre = "";
             } else {
                 notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
@@ -965,6 +986,140 @@ function macroproyectosDatos(idProy, idTorre) {
                     '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
                     '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + totalPromTotHtml + '</h5> </div></div> </div>';
 
+                //$('.promediosTotalesTorres').append(htmlMacroPorTorre);
+                htmlMacroPorTorre = "";
+            } else {
+                notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
+            }
+        },
+        error: function (jqXHR, exception) {
+            app.ajaxError(jqXHR, exception);
+        }
+    });
+
+
+    // ALL ============================================================================================================================================
+
+
+    $.ajax({
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: "GET",
+        async: false,
+        cache: false,
+        url: document.location.origin + '/Home/obtenerMacroproyectoAll',
+        data: { "idProy": idProy, "idTorre": "0", "idTipoUnidad": "01" },
+        success: function (data) {
+            if (data.success) {
+                // Limpio la lista
+                //$('.indiceMacroPorProy').html("");
+                // Convierto a JSON
+                var proyecto = JSON.parse(data.responseText);
+                var total = parseInt(0);
+                var totalPromPropio = parseInt(0);
+                var totalPromTot = parseInt(0);
+                var countPromedioM2 = parseInt(0);
+                // Recorro los datos y los voy cargando
+                for (var i = 0; i < proyecto.length; i++) {
+                    var estado = proyecto[i].estado;
+                    var cantidad = parseInt(proyecto[i].cantidad);
+                    var promVendidoPropio = proyecto[i].promedioVendidoPropio;
+                    var promVendidoTotalM2 = proyecto[i].promedioVendidoTotalM2;
+                    var porcentaje = (proyecto[i].porcentaje);//.toFixed(2);
+                    total += parseInt(cantidad);
+
+                    //if (estado != "Libre" && estado != "Asignado") {
+
+
+                    if (parseInt(promVendidoTotalM2) > 0) {
+
+                        countPromedioM2 += cantidad;
+                        totalPromPropio += parseInt(promVendidoPropio);
+                        totalPromTot += parseInt(promVendidoTotalM2);
+                    }
+                }
+                var totalPromPropioHtml = parseInt(0);
+                var totalPromTotHtml = parseInt(0);
+                if (countPromedioM2 == 0) {
+                    totalPromPropioHtml = 0;
+                    totalPromTotHtml = 0;
+                } else {
+                    totalPromPropioHtml = separadorMiles(totalPromPropio / countPromedioM2);
+                    totalPromTotHtml = separadorMiles(totalPromTot / countPromedioM2);
+                }
+                //alert("venta total " + totalPromPropioHtml + " metros 2 " + totalPromTotHtml);
+                htmlMacroPorTorre = '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
+                    '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido</span><h5>' + totalPromPropioHtml + '</h5> </div></div> </div>' +
+                    '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
+                    '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + totalPromTotHtml + '</h5> </div></div> </div>';
+
+                $('.promediosTotalesProy').append(htmlMacroPorTorre);
+                htmlMacroPorTorre = "";
+            } else {
+                notificacion('Ha ocurrido un error inesperado: [' + data.responseText + ']', 'danger');
+            }
+        },
+        error: function (jqXHR, exception) {
+            app.ajaxError(jqXHR, exception);
+        }
+    });
+
+    // Datos por torre .datos-por-proyecto
+    $.ajax({
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: "GET",
+        async: false,
+        cache: false,
+        url: document.location.origin + '/Home/obtenerMacroproyectoAll',
+        data: { "idProy": idProy, "idTorre": idTorre, "idTipoUnidad": "01" },
+        success: function (data) {
+            if (data.success) {
+                // Limpio la lista
+                //$('.indiceMacroPorTorre, .promediosTotalesTorres').html("");
+                // Convierto a JSON
+                var proyecto = JSON.parse(data.responseText);
+                var total = parseInt(0);
+                var totalPromPropio = parseInt(0);
+                var totalPromTot = parseInt(0);
+                var countPromedioM2 = parseInt(0);
+                // Recorro los datos y los voy cargando
+                for (var i = 0; i < proyecto.length; i++) {
+
+                    var estado = proyecto[i].estado;
+                    var cantidad = parseInt(proyecto[i].cantidad);
+                    var promVendidoPropio = proyecto[i].promedioVendidoPropio;
+                    var promVendidoTotalM2 = proyecto[i].promedioVendidoTotalM2;
+                    var porcentaje = (proyecto[i].porcentaje);
+
+                    total += parseInt(cantidad);
+
+                    if (parseInt(promVendidoTotalM2) > 0) {
+
+                        countPromedioM2 += cantidad;
+                        totalPromPropio += parseInt(promVendidoPropio);
+                        totalPromTot += parseInt(promVendidoTotalM2);
+                    }
+                    
+                }
+                var totalPromPropioHtml = parseInt(0);
+                var totalPromTotHtml = parseInt(0);
+                if (countPromedioM2 == 0) {
+                    totalPromPropioHtml = 0;
+                    totalPromTotHtml = 0;
+                } else {
+                    totalPromPropioHtml = separadorMiles(totalPromPropio / countPromedioM2);
+                    totalPromTotHtml = separadorMiles(totalPromTot / countPromedioM2);
+                }
+                htmlMacroPorTorre = '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
+                    '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido</span><h5>' + totalPromPropioHtml + '</h5> </div></div> </div>' +
+                    '<div class="col-sm-6 b-r-default p-b-20 p-t-20"><div class="row align-items-center text-center">' +
+                    '<div class="col-4 p-r-0"><i class="fas fa-signal text-c-red f-24"></i></div>' +
+                    '<div class="col-8 p-l-0"><span>Precio Base Promedio Vendido Metros</span><h5>' + totalPromTotHtml + '</h5> </div></div> </div>';
+
                 $('.promediosTotalesTorres').append(htmlMacroPorTorre);
                 htmlMacroPorTorre = "";
             } else {
@@ -975,6 +1130,7 @@ function macroproyectosDatos(idProy, idTorre) {
             app.ajaxError(jqXHR, exception);
         }
     });
+
 }
 
 // Obtiene todos los proyectos activos

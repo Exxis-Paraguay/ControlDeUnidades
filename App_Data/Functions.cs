@@ -143,6 +143,45 @@ namespace ControlDeUnidades.App_Data
         }
 
         /*
+         * Obtiene todos los datos para crear el MAcroproyecto
+         */
+        public string obtenerMacroproyectoAll(string idProy, string idTorre, string idTipoUnidad)// 01 - depto
+        {
+            int flag = 0;
+            string col = "";
+            string strJSON = "";
+            try
+            {
+                string queryObtProy = string.Format("CALL " + _dbNew + ".SP_MacroProyecto_All('{0}','{1}','{2}')", idTorre, idProy, idTipoUnidad);
+                OdbcCommand command = new OdbcCommand(queryObtProy, con.ConectaHANA());
+                OdbcDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    string estado = "\"estado\":\"" + reader[1].ToString() + "\",";
+                    string cantidad = "\"cantidad\":\"" + reader[2].ToString() + "\",";
+                    string promedioVendidoPropio = "\"promedioVendidoTotalM2\":\"" + reader[3].ToString() + "\",";
+                    string promedioVendidoTotal = "\"promedioVendidoPropio\":\"" + reader[4].ToString() + "\",";
+                    string porcentaje = "\"porcentaje\":\"" + (decimal.Round(Convert.ToDecimal(reader[5].ToString()), 2)).ToString() + "\"";
+
+
+                    string row = "{" + estado + cantidad + promedioVendidoPropio + promedioVendidoTotal + porcentaje + "}";
+
+                    if (flag > 0) col += "," + row;
+                    else col += row;
+                    flag++;
+                }
+                strJSON = "[" + col + "]";
+                con.DesconectarHANA();
+                return strJSON;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                con.DesconectarHANA();
+                return error;
+            }
+        }
+        /*
          * Obtiene todas las torres
          */
         public string obtenerTorres(string idProy)
